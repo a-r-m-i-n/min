@@ -9,7 +9,7 @@ namespace InstituteWeb\Min;
 use \MatthiasMullie\Minify;
 
 /**
- * Minifier
+ * Minifier for JS and CSS
  *
  * @package InstituteWeb\Min
  */
@@ -32,9 +32,9 @@ class Minifier
      * Method called by "jsCompressHandler"
      *
      * @param array $parameters
-     * @param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
+     * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
-    public function minifyJavaScript(array &$parameters, \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer)
+    public function minifyJavaScript(array &$parameters)
     {
         $parameters['jsLibs'] = $this->minifyFiles($parameters['jsLibs'], self::TYPE_JAVASCRIPT);
         $parameters['jsFiles'] = $this->minifyFiles($parameters['jsFiles'], self::TYPE_JAVASCRIPT);
@@ -45,9 +45,9 @@ class Minifier
      * Method called by "cssCompressHandler"
      *
      * @param array $parameters
-     * @param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
+     * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
-    public function minifyStylesheet(array &$parameters, \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer)
+    public function minifyStylesheet(array &$parameters)
     {
         $parameters['cssLibs'] = $this->minifyFiles($parameters['cssLibs'], self::TYPE_STYLESHEET);
         $parameters['cssFiles'] = $this->minifyFiles($parameters['cssFiles'], self::TYPE_STYLESHEET);
@@ -62,39 +62,41 @@ class Minifier
      */
     public function minifyFiles(array $files, $type = self::TYPE_JAVASCRIPT)
     {
-        $useGzip = false;
-        $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
         $filesAfterCompression = array();
+        $useGzip = extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
+        $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
+
         foreach ($files as $filename => $config) {
+            // Build minified filename
             $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1-min.$2', $filename);
-            if (extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']) {
+            if ($useGzip) {
                 $minifiedFilename .= '.gzip';
-                $useGzip = true;
             }
 
+            // Early continue, if compression is disabled for current file
             if (!$config['compress']) {
                 $filesAfterCompression[$filename] = $config;
                 continue;
             }
 
-            if ($config['compress']) {
-                /** @var Minify\CSS|Minify\JS $minifier */
-                $minifier = new $minifierClassName();
-                if ($type === self::TYPE_STYLESHEET) {
-                    $minifier->setImportExtensions(array());
-                }
-                $minifier->add($filename);
-
-                if (!file_exists($minifiedFilename)) {
-                    if ($useGzip) {
-                        $minifier->gzip($minifiedFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
-                    } else {
-                        $minifier->minify($minifiedFilename);
-                    }
-                }
-                $config['compress'] = false;
-                $config['file'] = $minifiedFilename;
+            // Compress the file
+            /** @var Minify\CSS|Minify\JS $minifier */
+            $minifier = new $minifierClassName();
+            if ($type === self::TYPE_STYLESHEET) {
+                $minifier->setImportExtensions(array());
             }
+            $minifier->add($filename);
+
+            if (!file_exists($minifiedFilename)) {
+                if ($useGzip) {
+                    $minifier->gzip($minifiedFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
+                } else {
+                    $minifier->minify($minifiedFilename);
+                }
+            }
+            $config['compress'] = false;
+            $config['file'] = $minifiedFilename;
+
             $filesAfterCompression[$minifiedFilename] = $config;
         }
         return $filesAfterCompression;
