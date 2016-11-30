@@ -7,7 +7,7 @@
  */
 
 $EM_CONF[$_EXTKEY] = array(
-    'title' => 'Minifier for JS and CSS',
+    'title' => 'Minifier for TYPO3',
     'description' => 'Extends TYPO3\'s compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size. Full composer support.',
     'category' => 'services',
     'author' => 'Armin Vieweg',
