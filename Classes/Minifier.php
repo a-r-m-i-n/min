@@ -80,6 +80,9 @@ class Minifier
             if ($config['compress']) {
                 /** @var Minify\CSS|Minify\JS $minifier */
                 $minifier = new $minifierClassName();
+                if ($type === self::TYPE_STYLESHEET) {
+                    $minifier->setImportExtensions(array());
+                }
                 $minifier->add($filename);
 
                 if (!file_exists($minifiedFilename)) {
