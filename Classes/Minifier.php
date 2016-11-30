@@ -66,7 +66,7 @@ class Minifier
         $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
         $filesAfterCompression = array();
         foreach ($files as $filename => $config) {
-            $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1.min.$2', $filename);
+            $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1-min.$2', $filename);
             if (extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']) {
                 $minifiedFilename .= '.gzip';
                 $useGzip = true;
