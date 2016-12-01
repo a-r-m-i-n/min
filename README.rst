@@ -35,7 +35,7 @@ You can fetch EXT:min by adding "instituteweb/min" as dependency to your root co
 
     "require": {
         "instituteweb/typo3-cms": "^7.6",
-        "instituteweb/min": "dev-master"
+        "instituteweb/min": "^1.0"
     },
 
 
