@@ -83,7 +83,11 @@ class Minifier
                 if ($type === self::TYPE_STYLESHEET) {
                     $minifier->setImportExtensions(array());
                 }
-                $minifier->add($config['code']);
+                $code = $config['code'];
+                if ($type === self::TYPE_STYLESHEET) {
+                    $code = $this->compressCss($code);
+                }
+                $minifier->add($code);
 
                 $config['code'] = $minifier->minify();
                 $config['compress'] = false;
@@ -91,10 +95,12 @@ class Minifier
                 continue;
             }
 
-            // Process with file and build minified filename
-            $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1-min.$2', $key);
+            // Process with file and build target filename for minified result
+            $pathinfo = pathinfo($config['file']);
+            $targetFilename = 'typo3temp/compressor/' . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
+
             if ($useGzip) {
-                $minifiedFilename .= '.gzip';
+                $targetFilename .= '.gzip';
             }
 
             // Compress the file
@@ -102,21 +108,67 @@ class Minifier
             $minifier = new $minifierClassName();
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions(array());
+                $minifier->add($this->compressCss(file_get_contents($config['file'])));
+            } else {
+                $minifier->add($config['file']);
             }
-            $minifier->add($key);
 
-            if (!file_exists(PATH_site . $minifiedFilename)) {
+            if (!file_exists(PATH_site . $targetFilename)) {
                 if ($useGzip) {
-                    $minifier->gzip(PATH_site . $minifiedFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
+                    $minifier->gzip(PATH_site . $targetFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
                 } else {
-                    $minifier->minify(PATH_site . $minifiedFilename);
+                    $minifier->minify(PATH_site . $targetFilename);
                 }
             }
             $config['compress'] = false;
-            $config['file'] = $minifiedFilename;
+            $config['file'] = $targetFilename;
 
-            $filesAfterCompression[$minifiedFilename] = $config;
+            $filesAfterCompression[$targetFilename] = $config;
         }
         return $filesAfterCompression;
+    }
+
+    /**
+     * Applies TYPO3's default minifier to CSS code
+     *
+     * @param string $contents CSS code
+     * @return string
+     * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
+     */
+    protected function compressCss($contents)
+    {
+        $contents = str_replace(CR, '', $contents);
+        // Strip any and all carriage returns.
+        // Match and process strings, comments and everything else, one chunk at a time.
+        // To understand this regex, read: "Mastering Regular Expressions 3rd Edition" chapter 6.
+        $contents = preg_replace_callback('%
+				# One-regex-to-rule-them-all! - version: 20100220_0100
+				# Group 1: Match a double quoted string.
+				("[^"\\\\]*+(?:\\\\.[^"\\\\]*+)*+") |  # or...
+				# Group 2: Match a single quoted string.
+				(\'[^\'\\\\]*+(?:\\\\.[^\'\\\\]*+)*+\') |  # or...
+				# Group 3: Match a regular non-MacIE5-hack comment.
+				(/\\*[^\\\\*]*+\\*++(?:[^\\\\*/][^\\\\*]*+\\*++)*+/) |  # or...
+				# Group 4: Match a MacIE5-type1 comment.
+				(/\\*(?:[^*\\\\]*+\\**+(?!/))*+\\\\[^*]*+\\*++(?:[^*/][^*]*+\\*++)*+/(?<!\\\\\\*/)) |  # or...
+				# Group 5: Match a MacIE5-type2 comment.
+				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
+				# Group 6: Match everything up to final closing regular comment
+				([^/]*+(?:(?!\\*)/[^/]*+)*?)
+				# Group 7: Match final closing regular comment
+				(/\\*[^/]++(?:(?<!\\*)/(?!\\*)[^/]*+)*+/(?<=(?<!\\\\)\\*/)) |  # or...
+				# Group 8: Match regular non-string, non-comment text.
+				([^"\'/]*+(?:(?!/\\*)/[^"\'/]*+)*+)
+				%Ssx', array('TYPO3\CMS\Core\Resource\ResourceCompressor', 'compressCssPregCallback'), $contents);
+
+        // Do it!
+        $contents = preg_replace('/^\\s++/', '', $contents);
+        // Strip leading whitespace.
+        $contents = preg_replace('/[ \\t]*+\\n\\s*+/S', '
+', $contents);
+        // Consolidate multi-lines space.
+        $contents = preg_replace('/(?<!\\s)\\s*+$/S', '
+', $contents);
+        return $contents;
     }
 }
