@@ -39,6 +39,8 @@ class Minifier
         $parameters['jsLibs'] = $this->minifyFiles($parameters['jsLibs'], self::TYPE_JAVASCRIPT);
         $parameters['jsFiles'] = $this->minifyFiles($parameters['jsFiles'], self::TYPE_JAVASCRIPT);
         $parameters['jsFooterFiles'] = $this->minifyFiles($parameters['jsFooterFiles'], self::TYPE_JAVASCRIPT);
+        $parameters['jsInline'] = $this->minifyFiles($parameters['jsInline'], self::TYPE_JAVASCRIPT);
+        $parameters['jsFooterInline'] = $this->minifyFiles($parameters['jsFooterInline'], self::TYPE_JAVASCRIPT);
     }
 
     /**
@@ -51,12 +53,13 @@ class Minifier
     {
         $parameters['cssLibs'] = $this->minifyFiles($parameters['cssLibs'], self::TYPE_STYLESHEET);
         $parameters['cssFiles'] = $this->minifyFiles($parameters['cssFiles'], self::TYPE_STYLESHEET);
+        $parameters['cssInline'] = $this->minifyFiles($parameters['cssInline'], self::TYPE_STYLESHEET);
     }
 
     /**
      * Minifies given files
      *
-     * @param array $files
+     * @param array $files file or inline code configuration. if file, key contains the path.
      * @param string $type see constants in this class (JS or CSS)
      * @return array
      */
@@ -66,17 +69,32 @@ class Minifier
         $useGzip = extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
         $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
 
-        foreach ($files as $filename => $config) {
-            // Build minified filename
-            $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1-min.$2', $filename);
-            if ($useGzip) {
-                $minifiedFilename .= '.gzip';
+        foreach ($files as $key => $config) {
+            // Do not proceed, if compression is disabled for current file
+            if (!$config['compress']) {
+                $filesAfterCompression[$key] = $config;
+                continue;
             }
 
-            // Early continue, if compression is disabled for current file
-            if (!$config['compress']) {
-                $filesAfterCompression[$filename] = $config;
+            // If key "code" is existing, this is not a file, it's inline code
+            if (array_key_exists('code', $config)) {
+                /** @var Minify\CSS|Minify\JS $minifier */
+                $minifier = new $minifierClassName();
+                if ($type === self::TYPE_STYLESHEET) {
+                    $minifier->setImportExtensions(array());
+                }
+                $minifier->add($config['code']);
+
+                $config['code'] = $minifier->minify();
+                $config['compress'] = false;
+                $filesAfterCompression[$key] = $config;
                 continue;
+            }
+
+            // Process with file and build minified filename
+            $minifiedFilename = preg_replace('/(.*?)\.(.*)/i', '$1-min.$2', $key);
+            if ($useGzip) {
+                $minifiedFilename .= '.gzip';
             }
 
             // Compress the file
@@ -85,13 +103,13 @@ class Minifier
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions(array());
             }
-            $minifier->add($filename);
+            $minifier->add($key);
 
-            if (!file_exists($minifiedFilename)) {
+            if (!file_exists(PATH_site . $minifiedFilename)) {
                 if ($useGzip) {
-                    $minifier->gzip($minifiedFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
+                    $minifier->gzip(PATH_site . $minifiedFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
                 } else {
-                    $minifier->minify($minifiedFilename);
+                    $minifier->minify(PATH_site . $minifiedFilename);
                 }
             }
             $config['compress'] = false;
