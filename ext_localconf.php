@@ -12,8 +12,8 @@ if (!defined('TYPO3_MODE')) {
 
 $boot = function ($extensionKey) {
     // Add CSS/JS Minifier
-    $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['cssCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyStylesheet';
-    $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['jsCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyJavaScript';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cssCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyStylesheet';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyJavaScript';
 };
 $boot($_EXTKEY);
 unset($boot);
