@@ -155,10 +155,6 @@ class Minifier
 				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
 				# Group 6: Match everything up to final closing regular comment
 				([^/]*+(?:(?!\\*)/[^/]*+)*?)
-				# Group 7: Match final closing regular comment
-				(/\\*[^/]++(?:(?<!\\*)/(?!\\*)[^/]*+)*+/(?<=(?<!\\\\)\\*/)) |  # or...
-				# Group 8: Match regular non-string, non-comment text.
-				([^"\'/]*+(?:(?!/\\*)/[^"\'/]*+)*+)
 				%Ssx', array('TYPO3\CMS\Core\Resource\ResourceCompressor', 'compressCssPregCallback'), $contents);
 
         // Do it!
