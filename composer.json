@@ -22,6 +22,8 @@
         }
     },
     "replace": {
-        "min": "*"
+        "min": "*",
+        "tinysource": "*",
+        "arminvieweg/tinysource": "*"
     }
 }
