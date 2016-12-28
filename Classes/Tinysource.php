@@ -75,9 +75,7 @@ class Tinysource
                     $afterBody = $this->makeTiny($afterBody, self::TINYSOURCE_BODY);
                 }
 
-                $GLOBALS['TSFE']->content = $this->customReplacements(
-                    $beforeHead . $head . $afterHead . $body . $afterBody
-                );
+                $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
             }
         }
     }
@@ -167,31 +165,6 @@ class Tinysource
             '',
             $source
         );
-        return $source;
-    }
-
-    /**
-     * Performs customReplacements on given source
-     *
-     * @param string $source
-     * @return string source code with performed customReplacements
-     */
-    protected function customReplacements($source)
-    {
-        $customReplacements = $this->conf['customReplacements.'];
-        if (is_array($customReplacements)) {
-            ksort($customReplacements);
-            foreach ($customReplacements as $parameters) {
-                switch ($parameters['type']) {
-                    case 'str_replace':
-                        $source = str_replace($parameters['search'], $parameters['replace'], $source);
-                        break;
-                    case 'preg_replace':
-                        $source = preg_replace($parameters['pattern'], $parameters['replace'], $source);
-                        break;
-                }
-            }
-        }
         return $source;
     }
 }
