@@ -18,17 +18,20 @@ Assets
 TYPO3's compressor is able to concatinate js and css files and compress them using gzip. But TYPO3 is not minifying
 the code. Minifying in general means to remove white spaces, comments and shorten local variable names, etc.
 
+This may save you up to 70% of file size, even when you gzip the assets already.
+
 When this extension is installed it hooks automatically into the compressor. It compresses backend and frontend assets.
 
+To enable just enable the TYPO3 compression in TypoScript like this:
 
-Here are some file sizes from real projects compared (both gzipped):
 ::
 
-    Type        Without     With minifying
-    --------------------------------------------
-    JS Libs     258KB       97KB
-    JS          62KB        49KB
-    CSS         -           -
+	config {
+        compressCss = 1
+        concatenateCss = 1
+        compressJs = 1
+        concatenateJs = 1
+    }
 
 
 HTML Source
@@ -36,6 +39,49 @@ HTML Source
 
 Since version 1.1 of EXT:min, the tinysource extension has been merged. You can configure it
 with `plugin.tx_min.tinysource`. More infos: https://forge.typo3.org/projects/extension-tinysource/wiki/
+
+This feature compresses your html code. You have several options you can make:
+
+::
+
+    plugin.tx_min.tinysource {
+        enable = 1
+        head {
+            stripTabs = 0
+            stripNewLines = 0
+            stripDoubleSpaces = 1
+            stripTwoLinesToOne = 1
+        }
+        body {
+            stripComments = 1
+            stripTabs = 1
+            stripNewLines = 1
+            stripDoubleSpaces = 1
+            stripTwoLinesToOne = 0
+            preventStripOfSearchComment = 1
+        }
+        oneLineMode = 1
+    }
+
+
+This example configuration will strip comments and output everything in one single line. You can include this setup
+in TYPO3 template record in backend.
+
+During development it is recommended to keep this feature genereally enabled to spot indention sensitive code.
+But in case you need to debug you could introduce a helping GET parameter **?debug=1** like this:
+
+::
+
+    [globalVar = TSFE : beUserLogin > 0] && [globalVar = GP:debug = 1]
+        plugin.tx_min.tinysource.enable = 0
+        config {
+            linkVars := addToList(debug(1))
+            compressCss = 0
+            concatenateCss = 0
+            compressJs = 0
+            concatenateJs = 0
+        }
+    [global]
 
 
 Installation

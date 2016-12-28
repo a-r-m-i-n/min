@@ -14,7 +14,7 @@ $boot = function ($extensionKey) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
         $extensionKey,
         'Configuration/TypoScript/',
-        'EXT:min Tiny html source'
+        'EXT:min Tinysource (html compressor)'
     );
 };
 $boot($_EXTKEY);
