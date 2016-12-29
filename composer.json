@@ -1,7 +1,6 @@
 {
     "name": "instituteweb/min",
     "description": "Extends TYPO3's compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.",
-    "version": "1.1.0",
     "type": "typo3-cms-extension",
     "homepage": "http://www.institute-web.org/",
     "license": "GPL-2.0+",
