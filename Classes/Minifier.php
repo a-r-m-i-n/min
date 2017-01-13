@@ -178,7 +178,6 @@ class Minifier
      */
     protected function compressCssPregCallback($matches)
     {
-        GeneralUtility::logDeprecatedFunction();
         if ($matches[1]) {
             // Group 1: Double quoted string.
             return $matches[1];
