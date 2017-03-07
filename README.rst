@@ -34,8 +34,8 @@ To enable just enable the TYPO3 compression in TypoScript like this:
     }
 
 
-HTML Source
-^^^^^^^^^^^
+HTML Source (aka Tinysource)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Since version 1.1 of EXT:min, the tinysource extension has been merged. You can configure it
 with `plugin.tx_min.tinysource`. More infos: https://forge.typo3.org/projects/extension-tinysource/wiki/
@@ -59,13 +59,18 @@ This feature compresses your html code. You have several options you can make:
             stripDoubleSpaces = 1
             stripTwoLinesToOne = 0
             preventStripOfSearchComment = 1
+            protectCode {
+                10 = /(<textarea.*?>.*?<\/textarea>)/is
+                20 = /(<pre.*?>.*?<\/pre>)/is
+            }
         }
         oneLineMode = 1
     }
 
 
-This example configuration will strip comments and output everything in one single line. You can include this setup
-in TYPO3 template record in backend.
+This example configuration will strip comments and output everything in one single line. You can protect code using
+regular expressions. This code will not be minified. The TypoScript config is automatically applied, when the extension
+is installed.
 
 During development it is recommended to keep this feature genereally enabled to spot indention sensitive code.
 But in case you need to debug you could introduce a helping GET parameter **?debug=1** like this:

@@ -15,11 +15,15 @@ namespace InstituteWeb\Min;
  */
 class Tinysource
 {
-
     /**
      * @var array Configuration of tx_tinysource
      */
     public $conf = array();
+
+    /**
+     * @var array
+     */
+    protected $protectedCode = [];
 
     /**
      * @var string
@@ -101,8 +105,18 @@ class Tinysource
             $replacements[] = "\r";
         }
 
+        // Code protection
+        if (is_array($this->conf[$type]['protectCode.']) && !empty($this->conf[$type]['protectCode.'])) {
+            foreach ($this->conf[$type]['protectCode.'] as $protectedCodeExpression) {
+                $source = $this->protectCode($protectedCodeExpression, $source);
+            }
+        }
+
         // Do replacements
         $source = str_replace($replacements, '', $source);
+
+        // Restore protected code
+        $source = $this->restoreProtectedCode($source);
 
         // Strip comments (only for <body>)
         if ($this->conf[$type]['stripComments'] && $type == self::TINYSOURCE_BODY) {
@@ -165,6 +179,38 @@ class Tinysource
             '',
             $source
         );
+        return $source;
+    }
+
+    /**
+     * Protects code from making it tiny
+     *
+     * @param string $regularExpression to match items you want to protect
+     * @param string $source which contains the code you want to protect
+     * @return string Given source, protected code parts are replaced by placeholders
+     */
+    protected function protectCode($regularExpression, $source)
+    {
+        $uniqueKey = '#!#' . uniqid('protected_', true) . '#!#';
+        preg_match($regularExpression, $source, $match);
+        if (count($match) > 1) {
+            $this->protectedCode[$uniqueKey] = $match[1];
+            return preg_replace($regularExpression, $uniqueKey, $source);
+        }
+        return $source;
+    }
+
+    /**
+     * Restores placeholders with stored, protected code
+     *
+     * @param string $source with placeholders
+     * @return string
+     */
+    protected function restoreProtectedCode($source)
+    {
+        foreach ($this->protectedCode as $key => $code) {
+            $source = str_replace($key, $code, $source);
+        }
         return $source;
     }
 }
