@@ -23,7 +23,7 @@ class Tinysource
     /**
      * @var array
      */
-    protected $protectedCode = [];
+    protected $protectedCode = array();
 
     /**
      * @var string
