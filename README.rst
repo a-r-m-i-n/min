@@ -1,6 +1,8 @@
 Minifier for TYPO3
 ==================
 
+**COMPATIBILITY RELEASE: Use this version for TYPO3 6.2 only!**
+
 Extends TYPO3's compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size.
 Full composer support. Since version 1.1 the extension tinysource has been merged and you can also minify html output
 of TYPO3.
