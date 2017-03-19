@@ -1,8 +1,8 @@
 plugin.tx_min.tinysource {
     enable = 1
     head {
-        stripTabs = 0
-        stripNewLines = 0
+        stripTabs = 1
+        stripNewLines = 1
         stripDoubleSpaces = 1
         stripTwoLinesToOne = 1
     }
