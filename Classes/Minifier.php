@@ -7,6 +7,7 @@ namespace InstituteWeb\Min;
  *  | (c) 2016-2017 Armin Vieweg <armin@v.ieweg.de>
  */
 use \MatthiasMullie\Minify;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Minifier for JS and CSS
@@ -97,7 +98,9 @@ class Minifier
 
             // Process with file and build target filename for minified result
             $pathinfo = pathinfo($config['file']);
-            $targetFilename = 'typo3temp/compressor/' . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
+            $targetPath = 'typo3temp/compressor/';
+            GeneralUtility::mkdir(PATH_site . $targetPath);
+            $targetFilename = $targetPath . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
 
             if ($useGzip) {
                 $targetFilename .= '.gzip';
