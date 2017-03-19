@@ -18,7 +18,7 @@ class Tinysource
     /**
      * @var array Configuration of tx_tinysource
      */
-    public $conf = array();
+    public $conf = [];
 
     /**
      * @var array
@@ -95,7 +95,7 @@ class Tinysource
     private function makeTiny($source, $type)
     {
         // Get replacements
-        $replacements = array();
+        $replacements = [];
 
         if ($this->conf[$type]['stripTabs']) {
             $replacements[] = "\t";
@@ -153,14 +153,14 @@ class Tinysource
         $hashedSearchTagEnd = '$$$' . $hash . '_end$$$';
 
         $source = str_replace(
-            array($originalSearchTagBegin, $originalSearchTagEnd),
-            array($hashedSearchTagBegin, $hashedSearchTagEnd),
+            [$originalSearchTagBegin, $originalSearchTagEnd],
+            [$hashedSearchTagBegin, $hashedSearchTagEnd],
             $source
         );
         $source = $this->stripHtmlComments($source);
         $source = str_replace(
-            array($hashedSearchTagBegin, $hashedSearchTagEnd),
-            array($originalSearchTagBegin, $originalSearchTagEnd),
+            [$hashedSearchTagBegin, $hashedSearchTagEnd],
+            [$originalSearchTagBegin, $originalSearchTagEnd],
             $source
         );
         return $source;

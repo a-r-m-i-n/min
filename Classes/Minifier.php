@@ -66,7 +66,7 @@ class Minifier
      */
     public function minifyFiles(array $files, $type = self::TYPE_JAVASCRIPT)
     {
-        $filesAfterCompression = array();
+        $filesAfterCompression = [];
         $useGzip = extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
         $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
 
@@ -82,7 +82,7 @@ class Minifier
                 /** @var Minify\CSS|Minify\JS $minifier */
                 $minifier = new $minifierClassName();
                 if ($type === self::TYPE_STYLESHEET) {
-                    $minifier->setImportExtensions(array());
+                    $minifier->setImportExtensions([]);
                 }
                 $code = $config['code'];
                 if ($type === self::TYPE_STYLESHEET) {
@@ -97,8 +97,8 @@ class Minifier
             }
 
             // Process with file and build target filename for minified result
-            /** @var \InstituteWeb\Min\Helper\ResourceCompressorPath $compressorPath */
-            $compressorPath = (string) GeneralUtility::makeInstance('InstituteWeb\\Min\\Helper\\ResourceCompressorPath');
+            /** @var Helper\ResourceCompressorPath $compressorPath */
+            $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
             if (!is_dir(PATH_SITE . $compressorPath)) {
                 GeneralUtility::mkdir(PATH_SITE . $compressorPath);
             }
@@ -113,7 +113,7 @@ class Minifier
             /** @var Minify\CSS|Minify\JS $minifier */
             $minifier = new $minifierClassName();
             if ($type === self::TYPE_STYLESHEET) {
-                $minifier->setImportExtensions(array());
+                $minifier->setImportExtensions([]);
                 $minifier->add($this->compressCss(file_get_contents($config['file'])));
             } else {
                 $minifier->add($config['file']);
@@ -161,7 +161,7 @@ class Minifier
 				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
 				# Group 6: Match everything up to final closing regular comment
 				([^/]*+(?:(?!\\*)/[^/]*+)*?)
-				%Ssx', array('InstituteWeb\Min\Minifier', 'compressCssPregCallback'), $contents);
+				%Ssx', ['InstituteWeb\Min\Minifier', 'compressCssPregCallback'], $contents);
 
         // Do it!
         $contents = preg_replace('/^\\s++/', '', $contents);
