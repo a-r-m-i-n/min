@@ -7,6 +7,7 @@ namespace InstituteWeb\Min;
  *  | (c) 2011-2017 Armin Ruediger Vieweg <armin@v.ieweg.de>
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class Tinysource
@@ -191,11 +192,13 @@ class Tinysource
      */
     protected function protectCode($regularExpression, $source)
     {
-        $uniqueKey = '#!#' . uniqid('protected_', true) . '#!#';
-        preg_match($regularExpression, $source, $match);
-        if (count($match) > 1) {
-            $this->protectedCode[$uniqueKey] = $match[1];
-            return preg_replace($regularExpression, $uniqueKey, $source);
+        preg_match_all($regularExpression, $source, $match);
+        if (!empty($match[1])) {
+            foreach ($match[1] as $occurrence) {
+                $uniqueKey = '#!#' . StringUtility::getUniqueId('protected_') . '#!#';
+                $this->protectedCode[$uniqueKey] = $occurrence;
+                $source = str_replace($occurrence, $uniqueKey, $source);
+            }
         }
         return $source;
     }
