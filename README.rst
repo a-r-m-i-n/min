@@ -26,7 +26,7 @@ To enable just enable the TYPO3 compression in TypoScript like this:
 
 ::
 
-	config {
+    config {
         compressCss = 1
         concatenateCss = 1
         compressJs = 1
