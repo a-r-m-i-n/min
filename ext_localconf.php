@@ -25,7 +25,6 @@ $boot = function ($extensionKey) {
     );
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] =
         'InstituteWeb\Min\Tinysource->tinysource';
-
 };
 $boot($_EXTKEY);
 unset($boot);

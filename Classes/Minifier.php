@@ -121,7 +121,10 @@ class Minifier
 
             if (!file_exists(PATH_site . $targetFilename)) {
                 if ($useGzip) {
-                    $minifier->gzip(PATH_site . $targetFilename, $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']);
+                    $minifier->gzip(
+                        PATH_site . $targetFilename,
+                        $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']
+                    );
                 } else {
                     $minifier->minify(PATH_site . $targetFilename);
                 }
@@ -177,7 +180,7 @@ class Minifier
     /**
      * Callback function for preg_replace
      * Copy from TYPO3 CMS, where it is deprecated since version 7, and removed in version 8
-     * 
+     *
      * @param array $matches
      * @return string the compressed string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
