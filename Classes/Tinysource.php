@@ -114,7 +114,7 @@ class Tinysource
         }
 
         // Do replacements
-        $source = str_replace($replacements, '', $source);
+        $source = str_replace($replacements, ' ', $source);
 
         // Restore protected code
         $source = $this->restoreProtectedCode($source);
@@ -133,7 +133,12 @@ class Tinysource
         if ($this->conf[$type]['stripDoubleSpaces']) {
             $source = preg_replace('/( {2,})/is', ' ', $source);
         }
-        if ($this->conf[$type]['stripTwoLinesToOne']) {
+
+        if ($this->conf[$type]['stripSpacesBetweenTags']) {
+            $source = str_replace('> <', '><', $source);
+        }
+
+        if ($this->conf[$type]['stripNewLines'] && $this->conf[$type]['stripTwoLinesToOne']) {
             $source = preg_replace('/(\n{2,})/is', "\n", $source);
         }
         return $source;

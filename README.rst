@@ -47,18 +47,23 @@ This feature compresses your html code. You have several options you can make:
     plugin.tx_min.tinysource {
         enable = 1
         head {
-            stripTabs = 0
-            stripNewLines = 0
+            stripTabs = 1
+            stripNewLines = 1
             stripDoubleSpaces = 1
             stripTwoLinesToOne = 1
+            # Caution with this option! Indention sensitive code may break.
+            stripSpacesBetweenTags = 0
         }
         body {
             stripComments = 1
             stripTabs = 1
             stripNewLines = 1
             stripDoubleSpaces = 1
+            # Caution with this option! Indention sensitive code may break.
+            stripSpacesBetweenTags = 0
             stripTwoLinesToOne = 0
             preventStripOfSearchComment = 1
+
             protectCode {
                 10 = /(<textarea.*?>.*?<\/textarea>)/is
                 20 = /(<pre.*?>.*?<\/pre>)/is
@@ -68,11 +73,10 @@ This feature compresses your html code. You have several options you can make:
     }
 
 
-This example configuration will strip comments and output everything in one single line. You can protect code using
-regular expressions. This code will not be minified. The TypoScript config is automatically applied, when the extension
-is installed.
+This is the default configuration of EXT:min. It will strip comments and output everything in one single line.
+You can protect code using regular expressions. This code will not be minified.
 
-During development it is recommended to keep this feature genereally enabled to spot indention sensitive code.
+During development it is recommended to keep this feature generally enabled to spot indention sensitive code.
 But in case you need to debug you could introduce a helping GET parameter **?debug=1** like this:
 
 ::

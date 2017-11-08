@@ -5,12 +5,16 @@ plugin.tx_min.tinysource {
         stripNewLines = 1
         stripDoubleSpaces = 1
         stripTwoLinesToOne = 1
+        # Caution with this option! Indention sensitive code may break.
+        stripSpacesBetweenTags = 0
     }
     body {
         stripComments = 1
         stripTabs = 1
         stripNewLines = 1
         stripDoubleSpaces = 1
+        # Caution with this option! Indention sensitive code may break.
+        stripSpacesBetweenTags = 0
         stripTwoLinesToOne = 0
         preventStripOfSearchComment = 1
 
