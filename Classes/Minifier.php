@@ -99,8 +99,8 @@ class Minifier
             // Process with file and build target filename for minified result
             /** @var Helper\ResourceCompressorPath $compressorPath */
             $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
-            if (!is_dir(PATH_SITE . $compressorPath)) {
-                GeneralUtility::mkdir(PATH_SITE . $compressorPath);
+            if (!is_dir(PATH_site . $compressorPath)) {
+                GeneralUtility::mkdir(PATH_site . $compressorPath);
             }
             $pathinfo = pathinfo($config['file']);
             $targetFilename = $compressorPath . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
