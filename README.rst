@@ -110,7 +110,7 @@ You can fetch EXT:min by adding "instituteweb/min" as dependency to your root co
 Or you can fetch and install it from TER. The uploaded version in TER contains the vendor folder. The optimized
 autoload.php file is required automatically, so EXT:min also works without composer.
 
-This extension is compatible with all TYPO3 versions since 6.2 LTS.
+This extension is compatible with all TYPO3 versions since 7.6 LTS.
 
 
 
