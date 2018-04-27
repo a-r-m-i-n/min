@@ -1,10 +1,10 @@
 <?php
 namespace InstituteWeb\Min;
 
-/*  | This extension is part of the TYPO3 project. The TYPO3 project is
- *  | free software and is licensed under GNU General Public License.
+/*  | This extension is made with love for TYPO3 CMS and is licensed
+ *  | under GNU General Public License.
  *  |
- *  | (c) 2011-2017 Armin Ruediger Vieweg <armin@v.ieweg.de>
+ *  | (c) 2011-2018 Armin Vieweg <armin@v.ieweg.de>
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
 use TYPO3\CMS\Core\Utility\StringUtility;
