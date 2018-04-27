@@ -96,15 +96,14 @@ But in case you need to debug you could introduce a helping GET parameter **?deb
 Installation
 ------------
 
-You can fetch EXT:min by adding "instituteweb/min" as dependency to your root composer.json.
+You can fetch EXT:min by adding "t3/min" as dependency to your root composer.json.
 
 ::
 
     "require": {
-        "instituteweb/typo3-cms": "^7.6",
-        "instituteweb/min": "^1.0"
+        "typo3/typo3-cms": "^8.7",
+        "t3/min": "^1.0"
     },
-
 
 
 Or you can fetch and install it from TER. The uploaded version in TER contains the vendor folder. The optimized
@@ -118,4 +117,4 @@ Links
 -----
 
 * Issue Tracker: https://forge.typo3.org/projects/extension-min/issues
-* Source code: https://bitbucket.org/InstituteWeb/min
+* Source code: https://bitbucket.org/t--3/min

@@ -1,5 +1,5 @@
 <?php
-namespace InstituteWeb\Min;
+namespace T3\Min;
 
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Minifier for JS and CSS
  *
- * @package InstituteWeb\Min
+ * @package T3\Min
  */
 class Minifier
 {
@@ -164,7 +164,7 @@ class Minifier
 				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
 				# Group 6: Match everything up to final closing regular comment
 				([^/]*+(?:(?!\\*)/[^/]*+)*?)
-				%Ssx', ['InstituteWeb\Min\Minifier', 'compressCssPregCallback'], $contents);
+				%Ssx', ['T3\Min\Minifier', 'compressCssPregCallback'], $contents);
 
         // Do it!
         $contents = preg_replace('/^\\s++/', '', $contents);

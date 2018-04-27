@@ -12,8 +12,8 @@ if (!defined('TYPO3_MODE')) {
 
 $boot = function ($extensionKey) {
     // Add CSS/JS Minifier
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cssCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyStylesheet';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'InstituteWeb\Min\Minifier->minifyJavaScript';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cssCompressHandler'] = 'T3\Min\Minifier->minifyStylesheet';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'T3\Min\Minifier->minifyJavaScript';
 
     // Register tiny source
     if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'])) {
@@ -21,10 +21,10 @@ $boot = function ($extensionKey) {
     }
     array_unshift(
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'],
-        'InstituteWeb\Min\Tinysource->tinysource'
+        'T3\Min\Tinysource->tinysource'
     );
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] =
-        'InstituteWeb\Min\Tinysource->tinysource';
+        'T3\Min\Tinysource->tinysource';
 };
 $boot($_EXTKEY);
 unset($boot);

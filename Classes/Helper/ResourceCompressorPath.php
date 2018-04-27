@@ -1,5 +1,5 @@
 <?php
-namespace InstituteWeb\Min\Helper;
+namespace T3\Min\Helper;
 
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Resource\ResourceCompressor;
 /**
  * Minifier for JS and CSS
  *
- * @package InstituteWeb\Min
+ * @package T3\Min
  */
 class ResourceCompressorPath extends ResourceCompressor
 {

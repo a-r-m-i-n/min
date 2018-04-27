@@ -1,5 +1,5 @@
 <?php
-namespace InstituteWeb\Min;
+namespace T3\Min;
 
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 /**
  * Class Tinysource
  *
- * @package InstituteWeb\Min
+ * @package T3\Min
  */
 class Tinysource
 {
