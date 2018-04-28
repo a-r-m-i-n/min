@@ -8,9 +8,10 @@ pipelines:
           - global-vendor
           - vendor
         script:
-          - composer global require phploc/phploc squizlabs/php_codesniffer
+          - composer global require phploc/phploc squizlabs/php_codesniffer phpmd/phpmd
           - /composer/vendor/bin/phploc .
           - /composer/vendor/bin/phpcs --extensions=php --standard=PSR2 .
+          - /composer/vendor/bin/phpmd . text cleancode,design,codesize,naming,unusedcode --ignore-violations-on-exit
 
 definitions:
   caches:
