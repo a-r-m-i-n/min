@@ -96,21 +96,22 @@ But in case you need to debug you could introduce a helping GET parameter **?deb
 Installation
 ------------
 
-You can fetch EXT:min by adding "t3/min" as dependency to your root composer.json.
+You can fetch EXT:min by adding "t3/min" as dependency to your root composer.json. PHP 5.3 is required.
 
 ::
 
     "require": {
-        "typo3/typo3-cms": "^8.7",
-        "t3/min": "^1.0"
+        "typo3/cms": "^8.7",
+        "t3/min": "^1.5"
     },
 
 
-Or you can fetch and install it from TER. The uploaded version in TER contains the vendor folder. The optimized
-autoload.php file is required automatically, so EXT:min also works without composer.
+Or you can fetch and install it from `TER <https://extensions.typo3.org/extension/min>`_.
 
-This extension is compatible with all TYPO3 versions since 7.6 LTS.
+The uploaded version in TER contains the vendor folder. The optimized autoload.php file is required automatically,
+so EXT:min also works without composer.
 
+This extension is compatible with all TYPO3 versions since 7.6 LTS, including TYPO3 9.
 
 
 Links
@@ -118,3 +119,4 @@ Links
 
 * Issue Tracker: https://forge.typo3.org/projects/extension-min/issues
 * Source code: https://bitbucket.org/t--3/min
+* TYPO3 Extension Repository: https://extensions.typo3.org/extension/min
