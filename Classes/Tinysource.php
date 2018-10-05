@@ -58,12 +58,8 @@ class Tinysource
             $bodyEndOffset = strpos($source, '>', $bodyOffset);
             $closingBodyOffset = strpos($source, '</body>');
 
-            if ($headOffset !== false &&
-                $headEndOffset !== false &&
-                $closingHeadOffset !== false ||
-                $bodyOffset !== false &&
-                $bodyEndOffset !== false &&
-                $closingBodyOffset !== false
+            if (($headOffset !== false && $headEndOffset !== false && $closingHeadOffset !== false) ||
+                ($bodyOffset !== false && $bodyEndOffset !== false && $closingBodyOffset !== false)
             ) {
                 $beforeHead = substr($source, 0, $headEndOffset + 1);
                 $head = substr($source, $headEndOffset + 1, $closingHeadOffset - $headEndOffset - 1);
@@ -93,7 +89,7 @@ class Tinysource
      * @param string $type BODY or HEAD
      * @return string the tiny source code
      */
-    private function makeTiny($source, $type)
+    private function makeTiny(string $source, string $type) : string
     {
         // Get replacements
         $replacements = [];
@@ -107,7 +103,7 @@ class Tinysource
         }
 
         // Code protection
-        if (is_array($this->conf[$type]['protectCode.']) && !empty($this->conf[$type]['protectCode.'])) {
+        if (\is_array($this->conf[$type]['protectCode.']) && !empty($this->conf[$type]['protectCode.'])) {
             foreach ($this->conf[$type]['protectCode.'] as $protectedCodeExpression) {
                 $source = $this->protectCode($protectedCodeExpression, $source);
             }
@@ -120,7 +116,7 @@ class Tinysource
         $source = $this->restoreProtectedCode($source);
 
         // Strip comments (only for <body>)
-        if ($this->conf[$type]['stripComments'] && $type == self::TINYSOURCE_BODY) {
+        if ($this->conf[$type]['stripComments'] && $type === self::TINYSOURCE_BODY) {
             //Prevent Strip of Search Comment if preventStripOfSearchComment is true
             if ($this->conf[$type]['preventStripOfSearchComment']) {
                 $source = $this->keepTypo3SearchTag($source);
@@ -131,7 +127,7 @@ class Tinysource
 
         // Strip double spaces
         if ($this->conf[$type]['stripDoubleSpaces']) {
-            $source = preg_replace('/( {2,})/is', ' ', $source);
+            $source = preg_replace('/( {2,})/', ' ', $source);
         }
 
         if ($this->conf[$type]['stripSpacesBetweenTags']) {
@@ -139,7 +135,7 @@ class Tinysource
         }
 
         if ($this->conf[$type]['stripNewLines'] && $this->conf[$type]['stripTwoLinesToOne']) {
-            $source = preg_replace('/(\n{2,})/is', "\n", $source);
+            $source = preg_replace('/(\n{2,})/i', "\n", $source);
         }
         return $source;
     }
@@ -150,7 +146,7 @@ class Tinysource
      * @param string $source
      * @return string source without html comments, except TYPO3SEARCH comments
      */
-    protected function keepTypo3SearchTag($source)
+    protected function keepTypo3SearchTag(string $source) : string
     {
         $originalSearchTagBegin = '<!--TYPO3SEARCH_begin-->';
         $originalSearchTagEnd = '<!--TYPO3SEARCH_end-->';
@@ -178,7 +174,7 @@ class Tinysource
      * @param string $source
      * @return string source without html comments
      */
-    protected function stripHtmlComments($source)
+    protected function stripHtmlComments(string $source) : string
     {
         $source = preg_replace(
             '/<\!\-\-(?!INT_SCRIPT\.)(?!HD_)(?!TDS_)(?!FD_)(?!CSS_INCLUDE_)(?!CSS_INLINE_)(?!JS_LIBS)' .
@@ -197,7 +193,7 @@ class Tinysource
      * @param string $source which contains the code you want to protect
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode($regularExpression, $source)
+    protected function protectCode(string $regularExpression, string $source) : string
     {
         preg_match_all($regularExpression, $source, $match);
         if (!empty($match[1])) {
@@ -216,7 +212,7 @@ class Tinysource
      * @param string $source with placeholders
      * @return string
      */
-    protected function restoreProtectedCode($source)
+    protected function restoreProtectedCode(string $source) : string
     {
         foreach ($this->protectedCode as $key => $code) {
             $source = str_replace($key, $code, $source);

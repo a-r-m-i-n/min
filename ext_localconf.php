@@ -10,21 +10,17 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-$boot = function ($extensionKey) {
-    // Add CSS/JS Minifier
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cssCompressHandler'] = 'T3\Min\Minifier->minifyStylesheet';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'T3\Min\Minifier->minifyJavaScript';
+// Add CSS/JS Minifier
+$GLOBALS['TYPO3_CONF_VARS']['FE']['cssCompressHandler'] = T3\Min\Minifier::class . '->minifyStylesheet';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = T3\Min\Minifier::class .  '->minifyJavaScript';
 
-    // Register tiny source
-    if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'])) {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'] = array();
-    }
-    array_unshift(
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'],
-        'T3\Min\Tinysource->tinysource'
-    );
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] =
-        'T3\Min\Tinysource->tinysource';
-};
-$boot($_EXTKEY);
-unset($boot);
+// Register tiny source
+if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'])) {
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'] = [];
+}
+array_unshift(
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'],
+    'T3\Min\Tinysource->tinysource'
+);
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] =
+    'T3\Min\Tinysource->tinysource';

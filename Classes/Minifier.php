@@ -64,10 +64,10 @@ class Minifier
      * @param string $type see constants in this class (JS or CSS)
      * @return array
      */
-    public function minifyFiles(array $files, $type = self::TYPE_JAVASCRIPT)
+    public function minifyFiles(array &$files, $type = self::TYPE_JAVASCRIPT)
     {
         $filesAfterCompression = [];
-        $useGzip = extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
+        $useGzip = \extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
         $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
 
         foreach ($files as $key => $config) {
@@ -144,13 +144,14 @@ class Minifier
      * @return string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCss($contents)
+    protected function compressCss(string $contents) : string
     {
         $contents = str_replace(CR, '', $contents);
         // Strip any and all carriage returns.
         // Match and process strings, comments and everything else, one chunk at a time.
         // To understand this regex, read: "Mastering Regular Expressions 3rd Edition" chapter 6.
-        $contents = preg_replace_callback('%
+        $compressedContents = preg_replace_callback(
+            '%
 				# One-regex-to-rule-them-all! - version: 20100220_0100
 				# Group 1: Match a double quoted string.
 				("[^"\\\\]*+(?:\\\\.[^"\\\\]*+)*+") |  # or...
@@ -164,17 +165,18 @@ class Minifier
 				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
 				# Group 6: Match everything up to final closing regular comment
 				([^/]*+(?:(?!\\*)/[^/]*+)*?)
-				%Ssx', ['T3\Min\Minifier', 'compressCssPregCallback'], $contents);
+				%Ssx',
+            [self::class, 'compressCssPregCallback'],
+            $contents
+        );
 
         // Do it!
-        $contents = preg_replace('/^\\s++/', '', $contents);
+        $compressedContents = preg_replace('/^\\s++/', '', $compressedContents);
         // Strip leading whitespace.
-        $contents = preg_replace('/[ \\t]*+\\n\\s*+/S', '
-', $contents);
+        $compressedContents = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", $compressedContents);
         // Consolidate multi-lines space.
-        $contents = preg_replace('/(?<!\\s)\\s*+$/S', '
-', $contents);
-        return $contents;
+        $compressedContents = preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedContents);
+        return $compressedContents;
     }
 
     /**
@@ -185,40 +187,39 @@ class Minifier
      * @return string the compressed string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCssPregCallback($matches)
+    protected function compressCssPregCallback(array $matches) : string
     {
         if ($matches[1]) {
             // Group 1: Double quoted string.
             return $matches[1];
-        } elseif ($matches[2]) {
+        }
+        if ($matches[2]) {
             // Group 2: Single quoted string.
             return $matches[2];
-        } elseif ($matches[3]) {
+        }
+        if ($matches[3]) {
             // Group 3: Regular non-MacIE5-hack comment.
-            return '
-';
-        } elseif ($matches[4]) {
+            return "\n";
+        }
+        if ($matches[4]) {
             // Group 4: MacIE5-hack-type-1 comment.
-            return '
-/*\\T1*/
-';
-        } elseif ($matches[5]) {
+            return "\n" . '/*\\T1*/' . "\n";
+        }
+        if ($matches[5]) {
             // Group 5,6,7: MacIE5-hack-type-2 comment
             $matches[6] = preg_replace('/\\s++([+>{};,)])/S', '$1', $matches[6]);
             // Clean pre-punctuation.
             $matches[6] = preg_replace('/([+>{}:;,(])\\s++/S', '$1', $matches[6]);
             // Clean post-punctuation.
-            $matches[6] = preg_replace('/;?\\}/S', '}
-', $matches[6]);
+            $matches[6] = preg_replace('/;?\\}/S', '}' . "\n", $matches[6]);
             // Add a touch of formatting.
-            return '
-/*T2\\*/' . $matches[6] . '
-/*T2E*/
-';
-        } elseif ($matches[8]) {
+            return "\n" . '/*T2\\*/' . $matches[6] . "\n" . '/*T2E*/' . "\n";
+        }
+        if ($matches[8]) {
             // Group 8: calc function (see http://www.w3.org/TR/2006/WD-css3-values-20060919/#calc)
             return 'calc' . $matches[8];
-        } elseif (isset($matches[9])) {
+        }
+        if (isset($matches[9])) {
             // Group 9: Non-string, non-comment. Safe to clean whitespace here.
             $matches[9] = preg_replace('/^\\s++/', '', $matches[9]);
             // Strip all leading whitespace.
@@ -230,13 +231,10 @@ class Minifier
             // Clean pre-punctuation.
             $matches[9] = preg_replace('/([+>{}:;,(])\\s++/S', '$1', $matches[9]);
             // Clean post-punctuation.
-            $matches[9] = preg_replace('/;?\\}/S', '}
-', $matches[9]);
+            $matches[9] = preg_replace('/;?\\}/S', '}' . "\n", $matches[9]);
             // Add a touch of formatting.
             return $matches[9];
         }
-        return $matches[0] . '
-/* ERROR! Unexpected _proccess_css_minify() parameter */
-';
+        return $matches[0] . "\n" . '/* ERROR! Unexpected _proccess_css_minify() parameter */' . "\n";
     }
 }

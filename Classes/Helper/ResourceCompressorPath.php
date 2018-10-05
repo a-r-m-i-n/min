@@ -20,7 +20,7 @@ class ResourceCompressorPath extends ResourceCompressor
      */
     public function __construct()
     {
-        // Do nothing
+        // Do nothing (on purpose)
     }
 
     /**
