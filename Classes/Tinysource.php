@@ -4,7 +4,7 @@ namespace T3\Min;
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2011-2018 Armin Vieweg <armin@v.ieweg.de>
+ *  | (c) 2011-2019 Armin Vieweg <armin@v.ieweg.de>
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
 use TYPO3\CMS\Core\Utility\StringUtility;

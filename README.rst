@@ -102,7 +102,7 @@ You can fetch EXT:min by adding "t3/min" as dependency to your root composer.jso
 
     "require": {
         "typo3/cms": "^9.5",
-        "t3/min": "^1.6"
+        "t3/min": "^1.7"
     },
 
 

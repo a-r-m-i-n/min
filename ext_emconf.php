@@ -3,7 +3,7 @@
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2016-2018 Armin Vieweg <armin@v.ieweg.de>
+ *  | (c) 2016-2019 Armin Vieweg <armin@v.ieweg.de>
  */
 
 // phpcs:disable
@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.6.0',
+    'version' => '1.7.0',
     'constraints' => [
         'depends' => [
             'php' => '7.0.0',
