@@ -63,18 +63,18 @@ This feature compresses your html code. You have several options you can make:
             stripSpacesBetweenTags = 0
             stripTwoLinesToOne = 0
             preventStripOfSearchComment = 1
-
-            protectCode {
-                10 = /(<textarea.*?>.*?<\/textarea>)/is
-                20 = /(<pre.*?>.*?<\/pre>)/is
-            }
+        }
+        protectCode {
+            10 = /(<textarea.*?>.*?<\/textarea>)/is
+            20 = /(<pre.*?>.*?<\/pre>)/is
         }
         oneLineMode = 1
     }
 
 
 This is the default configuration of EXT:min. It will strip comments and output everything in one single line.
-You can protect code using regular expressions. This code will not be minified.
+You can protect code using regular expressions. This code will not be minified. Also, you can use `protectCode` within
+`head` or `body` section. They get merged with the global `protectCode` expressions.
 
 During development it is recommended to keep this feature generally enabled to spot indention sensitive code.
 But in case you need to debug you could introduce a helping GET parameter **?debug=1** like this:

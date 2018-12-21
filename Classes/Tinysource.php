@@ -77,6 +77,11 @@ class Tinysource
                 }
 
                 $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
+                if ($this->conf['oneLineMode']) {
+                    $source = $this->protectCode($GLOBALS['TSFE']->content, '');
+                    $source = str_replace(['> <', '" />'], ['><', '"/>'], $source);
+                    $GLOBALS['TSFE']->content = $this->restoreProtectedCode($source);
+                }
             }
         }
     }
@@ -102,24 +107,17 @@ class Tinysource
             $replacements[] = "\r";
         }
 
-        // Code protection
-        if (\is_array($this->conf[$type]['protectCode.']) && !empty($this->conf[$type]['protectCode.'])) {
-            foreach ($this->conf[$type]['protectCode.'] as $protectedCodeExpression) {
-                $source = $this->protectCode($protectedCodeExpression, $source);
-            }
-        }
+        // Protect whitespace sensitive code
+        $source = $this->protectCode($source, $type);
 
         // Do replacements
         $source = str_replace($replacements, ' ', $source);
 
-        // Restore protected code
-        $source = $this->restoreProtectedCode($source);
-
         // Strip comments (only for <body>)
         if ($this->conf[$type]['stripComments'] && $type === self::TINYSOURCE_BODY) {
-            //Prevent Strip of Search Comment if preventStripOfSearchComment is true
+            // Prevent Strip of Search Comment if preventStripOfSearchComment is true
             if ($this->conf[$type]['preventStripOfSearchComment']) {
-                $source = $this->keepTypo3SearchTag($source);
+                $source = $this->keepTypo3SearchTagAndStripHtmlComments($source);
             } else {
                 $source = $this->stripHtmlComments($source);
             }
@@ -130,27 +128,31 @@ class Tinysource
             $source = preg_replace('/( {2,})/', ' ', $source);
         }
 
+        // Strip spaces between tags (also done in one line mode)
         if ($this->conf[$type]['stripSpacesBetweenTags']) {
             $source = str_replace('> <', '><', $source);
         }
 
+        // Strip two or more line breaks to one
         if ($this->conf[$type]['stripNewLines'] && $this->conf[$type]['stripTwoLinesToOne']) {
             $source = preg_replace('/(\n{2,})/i', "\n", $source);
         }
-        return $source;
+
+        // Restore protected code
+        return $this->restoreProtectedCode($source);
     }
 
     /**
-     * Strips html comments from given string, but keep TYPO3SEARCH strings
+     * Strips html comments from given string, but keep TYPO3SEARCH_ strings
      *
      * @param string $source
      * @return string source without html comments, except TYPO3SEARCH comments
      */
-    protected function keepTypo3SearchTag(string $source) : string
+    protected function keepTypo3SearchTagAndStripHtmlComments(string $source) : string
     {
         $originalSearchTagBegin = '<!--TYPO3SEARCH_begin-->';
         $originalSearchTagEnd = '<!--TYPO3SEARCH_end-->';
-        $hash = uniqid('t3search_replacement_');
+        $hash = StringUtility::getUniqueId('t3search_replacement_');
         $hashedSearchTagBegin = '$$$' . $hash . '_start$$$';
         $hashedSearchTagEnd = '$$$' . $hash . '_end$$$';
 
@@ -189,18 +191,23 @@ class Tinysource
     /**
      * Protects code from making it tiny
      *
-     * @param string $regularExpression to match items you want to protect
      * @param string $source which contains the code you want to protect
+     * @param string $type
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode(string $regularExpression, string $source) : string
+    protected function protectCode(string $source, string $type) : string
     {
-        preg_match_all($regularExpression, $source, $match);
-        if (!empty($match[1])) {
-            foreach ($match[1] as $occurrence) {
-                $uniqueKey = '#!#' . StringUtility::getUniqueId('protected_') . '#!#';
-                $this->protectedCode[$uniqueKey] = $occurrence;
-                $source = str_replace($occurrence, $uniqueKey, $source);
+        $expressions = array_merge($this->conf['protectCode.'] ?: [], $this->conf[$type]['protectCode.'] ?: []);
+        if (!empty($expressions)) {
+            foreach ($expressions as $protectedCodeExpression) {
+                preg_match_all($protectedCodeExpression, $source, $match);
+                if (!empty($match[1])) {
+                    foreach ($match[1] as $occurrence) {
+                        $uniqueKey = '#!#' . StringUtility::getUniqueId('protected_') . '#!#';
+                        $this->protectedCode[$uniqueKey] = $occurrence;
+                        $source = str_replace($occurrence, $uniqueKey, $source);
+                    }
+                }
             }
         }
         return $source;
@@ -214,8 +221,10 @@ class Tinysource
      */
     protected function restoreProtectedCode(string $source) : string
     {
-        foreach ($this->protectedCode as $key => $code) {
-            $source = str_replace($key, $code, $source);
+        if (\is_array($this->conf['protectCode.']) && !empty($this->conf['protectCode.'])) {
+            foreach ($this->protectedCode as $key => $code) {
+                $source = str_replace($key, $code, $source);
+            }
         }
         return $source;
     }

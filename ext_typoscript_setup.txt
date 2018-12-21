@@ -17,11 +17,10 @@ plugin.tx_min.tinysource {
         stripSpacesBetweenTags = 0
         stripTwoLinesToOne = 0
         preventStripOfSearchComment = 1
-
-        protectCode {
-            10 = /(<textarea.*?>.*?<\/textarea>)/is
-            20 = /(<pre.*?>.*?<\/pre>)/is
-        }
+    }
+    protectCode {
+        10 = /(<textarea.*?>.*?<\/textarea>)/is
+        20 = /(<pre.*?>.*?<\/pre>)/is
     }
     oneLineMode = 1
 }
