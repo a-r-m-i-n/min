@@ -40,8 +40,8 @@ class Minifier
         $parameters['jsLibs'] = $this->minifyFiles($parameters['jsLibs'], self::TYPE_JAVASCRIPT);
         $parameters['jsFiles'] = $this->minifyFiles($parameters['jsFiles'], self::TYPE_JAVASCRIPT);
         $parameters['jsFooterFiles'] = $this->minifyFiles($parameters['jsFooterFiles'], self::TYPE_JAVASCRIPT);
-        $parameters['jsInline'] = $this->minifyFiles($parameters['jsInline'], self::TYPE_JAVASCRIPT);
-        $parameters['jsFooterInline'] = $this->minifyFiles($parameters['jsFooterInline'], self::TYPE_JAVASCRIPT);
+        $parameters['jsInline'] = $this->minifyFiles($parameters['jsInline'], self::TYPE_JAVASCRIPT, true);
+        $parameters['jsFooterInline'] = $this->minifyFiles($parameters['jsFooterInline'], self::TYPE_JAVASCRIPT, true);
     }
 
     /**
@@ -62,9 +62,10 @@ class Minifier
      *
      * @param array $files file or inline code configuration. if file, key contains the path.
      * @param string $type see constants in this class (JS or CSS)
+     * @param bool $isInline
      * @return array
      */
-    public function minifyFiles(array &$files, $type = self::TYPE_JAVASCRIPT)
+    public function minifyFiles(array &$files, $type = self::TYPE_JAVASCRIPT, $isInline = false)
     {
         $filesAfterCompression = [];
         $useGzip = \extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
@@ -90,7 +91,7 @@ class Minifier
                 }
                 $minifier->add($code);
 
-                $config['code'] = $minifier->minify();
+                $config['code'] = $minifier->minify() . ($isInline ? ';' : '');
                 $config['compress'] = false;
                 $filesAfterCompression[$key] = $config;
                 continue;
