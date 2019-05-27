@@ -59,6 +59,10 @@ Vagrant.configure("2") do |config|
     end
 
     # Provider Scripts
+    config.vm.provision "shell", run: "once", privileged: true, name: "init", inline: <<-SHELL
+        /home/vagrant/enable-php/7.2.sh
+    SHELL
+
     # Set up SSL certificate for given hostname
     config.vm.provision "shell", run: "once", privileged: true, name: "update-ssl-certificate", inline: <<-SHELL
         openssl genrsa -des3 -passout pass:xxxx -out /tmp/server.pass.key 2048 2>/dev/null
@@ -129,6 +133,8 @@ Vagrant.configure("2") do |config|
         vendor/bin/typo3cms configuration:set MAIL/transport smtp
         vendor/bin/typo3cms configuration:set MAIL/transport_smtp_server 127.0.0.1:1025
         vendor/bin/typo3cms cache:flush
+
+        cp /var/www/typo3_9/public/typo3/sysext/install/Resources/Private/FolderStructureTemplateFiles/root-htaccess /var/www/typo3_9/.htaccess
     SHELL
     config.vm.provision "shell", run: "once", privileged: true, name: "setup-typo3-9-root", inline: <<-SHELL
         cd /var/www/typo3_9
