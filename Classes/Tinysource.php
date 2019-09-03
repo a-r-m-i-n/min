@@ -138,6 +138,17 @@ class Tinysource
             $source = preg_replace('/(\n{2,})/i', "\n", $source);
         }
 
+        if ($this->conf[$type]['removeTypeInScriptTags']) {
+            $source = str_replace(
+                [
+                    ' type="text/javascript"',
+                    ' type=\'text/javascript\'',
+                ],
+                '',
+                $source
+            );
+        }
+
         // Restore protected code
         return $this->restoreProtectedCode($source);
     }

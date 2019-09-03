@@ -63,6 +63,7 @@ This feature compresses your html code. You have several options you can make:
             stripSpacesBetweenTags = 0
             stripTwoLinesToOne = 0
             preventStripOfSearchComment = 1
+            removeTypeInScriptTags = 1
         }
         protectCode {
             10 = /(<textarea.*?>.*?<\/textarea>)/is
