@@ -22,8 +22,6 @@
         }
     },
     "replace": {
-        "min": "*",
-        "tinysource": "*",
         "arminvieweg/tinysource": "*",
         "instituteweb/min": "*"
     }
