@@ -7,6 +7,7 @@ namespace T3\Min;
  *  | (c) 2016-2020 Armin Vieweg <armin@v.ieweg.de>
  */
 use \MatthiasMullie\Minify;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -98,10 +99,15 @@ class Minifier
             }
 
             // Process with file and build target filename for minified result
+            if (!Compatibility::isTypo3Version()) {
+                $pathSite = PATH_site;
+            } else {
+                $pathSite = Environment::getPublicPath() . DIRECTORY_SEPARATOR;
+            }
             /** @var Helper\ResourceCompressorPath $compressorPath */
             $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
-            if (!is_dir(PATH_site . $compressorPath)) {
-                GeneralUtility::mkdir(PATH_site . $compressorPath);
+            if (!is_dir($pathSite . $compressorPath)) {
+                GeneralUtility::mkdir($pathSite . $compressorPath);
             }
             $pathinfo = pathinfo($config['file']);
             $targetFilename = $compressorPath . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
@@ -120,14 +126,14 @@ class Minifier
                 $minifier->add($config['file']);
             }
 
-            if (!file_exists(PATH_site . $targetFilename)) {
+            if (!file_exists($pathSite . $targetFilename)) {
                 if ($useGzip) {
                     $minifier->gzip(
-                        PATH_site . $targetFilename,
+                        $pathSite . $targetFilename,
                         $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']
                     );
                 } else {
-                    $minifier->minify(PATH_site . $targetFilename);
+                    $minifier->minify($pathSite . $targetFilename);
                 }
             }
             $config['compress'] = false;
