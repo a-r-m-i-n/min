@@ -21,8 +21,8 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '1.9.0-dev',
     'constraints' => [
         'depends' => [
-            'php' => '7.0.0',
-            'typo3' => '7.6.0-9.5.99',
+            'php' => '7.2.0-0.0.0',
+            'typo3' => '7.6.0-10.9.99',
         ],
         'conflicts' => [
             'tinysource' => ''
