@@ -9,7 +9,7 @@
 // phpcs:disable
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Minifier for TYPO3',
-    'description' => 'Extends TYPO3\'s compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.',
+    'description' => 'Extends TYPO3\'s compressor for JS and CSS with minifier. This may save you up to 70% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.',
     'category' => 'services',
     'author' => 'Armin Vieweg',
     'author_email' => 'armin@v.ieweg.de',
@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.9.0-dev',
+    'version' => '1.9.0',
     'constraints' => [
         'depends' => [
             'php' => '7.2.0-0.0.0',

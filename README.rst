@@ -97,13 +97,13 @@ But in case you need to debug you could introduce a helping GET parameter **?deb
 Installation
 ------------
 
-You can fetch EXT:min by adding "t3/min" as dependency to your root composer.json. PHP 7.0 is required.
+You can fetch EXT:min by adding "t3/min" as dependency to your root composer.json. PHP 7.2 is required.
 
 ::
 
     "require": {
-        "typo3/cms": "^9.5",
-        "t3/min": "^1.8"
+        "typo3/cms": "^10.4",
+        "t3/min": "^1.9"
     },
 
 
@@ -112,7 +112,11 @@ Or you can fetch and install it from `TER <https://extensions.typo3.org/extensio
 The uploaded version in TER contains the vendor folder. The optimized autoload.php file is required automatically,
 so EXT:min also works without composer.
 
-This extension is compatible with all TYPO3 versions since 7.6 LTS, including 9.5 LTS.
+This extension is compatible with all TYPO3 versions since 7.6 LTS, including 10.4 LTS.
+
+
+.. note::
+   The min extension does not take the new AssetCollector into account, which has been introduced with TYPO3 10.4.
 
 
 Links
