@@ -26,7 +26,7 @@ class Minifier
     public function __construct()
     {
         if (!class_exists('\MatthiasMullie\Minify\Minify')) {
-            require_once(__DIR__ . '/../vendor/autoload.php');
+            require_once(GeneralUtility::getFileAbsFileName('EXT:min/Resources/Private/PHP/vendor/autoload.php'));
         }
     }
 

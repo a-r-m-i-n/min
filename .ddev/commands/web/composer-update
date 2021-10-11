@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+cd /var/www/min/Resources/Private/PHP
+
+composer update

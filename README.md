@@ -12,9 +12,11 @@ the functionality of tinysource extension, which makes tinysource deprecated.
 
 - [X] Convert README to Markdown
 - [X] Add [DDEV for TYPO3 extensions](https://github.com/a-r-m-i-n/ddev-for-typo3-extensions)
+- [X] Move TER dependencies to dedicated directory (`Resources/Private/PHP`)
+  - [X] Provide DDEV command to update TER dependencies
+- [X] Drop support for all TYPO3 CMS versions below 10.4
+- [X] Raise PHP requirement to `"^7.4 || ^8.0"`
 - [ ] TYPO3 CMS 11 LTS Support
-- [ ] Drop support for all TYPO3 CMS versions below 10.4
-- [ ] Raise PHP requirement to `"^7.4 || ^8.0"`
 - [ ] Remove automatic TypoScript inclusion (provide static template instead)
 - [ ] Remove options `stripTabs`, `stripNewLines`, `stripDoubleSpaces`, `stripTwoLinesToOne` and enable them always
 - [ ] Remove option `stripSpacesBetweenTags`
@@ -25,6 +27,7 @@ the functionality of tinysource extension, which makes tinysource deprecated.
 - [ ] Update extension icon (?)
 - [ ] Move git repository to https://github.com/a-r-m-i-n/min
   - [ ] Update URL on packagist
+- [ ] Provide GitHub Action to build and deploy a new TER release
 
 
 
