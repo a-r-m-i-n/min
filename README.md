@@ -22,6 +22,9 @@ the functionality of tinysource extension, which makes tinysource deprecated.
   - [ ] Add new options to `plugin.tx_min.` for this 
 - [ ] Write documentation
 - [ ] Update README contents
+- [ ] Update extension icon (?)
+- [ ] Move git repository to https://github.com/a-r-m-i-n/min
+  - [ ] Update URL on packagist
 
 
 
