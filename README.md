@@ -11,7 +11,7 @@ the functionality of tinysource extension, which makes tinysource deprecated.
 ## Version 2.0 Roadmap
 
 - [X] Convert README to Markdown
-- [ ] Add [DDEV for TYPO3 extensions](https://github.com/a-r-m-i-n/ddev-for-typo3-extensions)
+- [X] Add [DDEV for TYPO3 extensions](https://github.com/a-r-m-i-n/ddev-for-typo3-extensions)
 - [ ] TYPO3 CMS 11 LTS Support
 - [ ] Drop support for all TYPO3 CMS versions below 10.4
 - [ ] Raise PHP requirement to `"^7.4 || ^8.0"`

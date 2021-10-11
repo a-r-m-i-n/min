@@ -1,0 +1,21 @@
+name: min
+type: php
+docroot: ~
+no_project_mount: true
+php_version: "7.4"
+composer_version: "2"
+webserver_type: apache-fpm
+router_http_port: "80"
+router_https_port: "443"
+xdebug_enabled: false
+additional_hostnames:
+    - v10.min
+    - v11.min
+additional_fqdns: []
+provider: default
+use_dns_when_possible: true
+omit_containers:
+    - dba
+extra_services:
+    - v10-data
+    - v11-data
