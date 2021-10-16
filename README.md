@@ -18,6 +18,7 @@ the functionality of tinysource extension, which makes tinysource deprecated.
 - [X] Raise PHP requirement to `"^7.4 || ^8.0"`
 - [ ] TYPO3 CMS 11 LTS Support
 - [X] Remove automatic TypoScript inclusion (provide static template instead)
+- [X] Provide ?debug=1 TypoScript configuration and enable TYPO3's compression flags
 - [ ] Remove options `stripTabs`, `stripNewLines`, `stripDoubleSpaces`, `stripTwoLinesToOne` and enable them always
 - [ ] Remove option `stripSpacesBetweenTags`
 - [ ] Provide optional CSS/JS compression for [assets](https://docs.typo3.org/other/typo3/view-helper-reference/master/en-us/typo3/fluid/latest/Asset/Index.html)

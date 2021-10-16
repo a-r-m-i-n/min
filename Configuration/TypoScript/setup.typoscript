@@ -1,3 +1,10 @@
+config {
+	compressCss = 1
+	concatenateCss = 1
+	compressJs = 1
+	concatenateJs = 1
+}
+
 plugin.tx_min.tinysource {
 	enable = 1
 	head {
@@ -25,3 +32,15 @@ plugin.tx_min.tinysource {
 	}
 	oneLineMode = 1
 }
+
+[getTSFE() && getTSFE().isBackendUserLoggedIn() && request.getQueryParams()['debug'] > 0]
+	plugin.tx_min.tinysource.enable = 0
+	config {
+		linkVars := addToList(debug(1))
+		compressCss = 0
+		concatenateCss = 0
+		compressJs = 0
+		concatenateJs = 0
+		no_cache = 1
+	}
+[global]
