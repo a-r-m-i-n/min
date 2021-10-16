@@ -4,7 +4,7 @@ namespace T3\Min;
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2011-2020 Armin Vieweg <armin@v.ieweg.de>
+ *  | (c) 2011-2021 Armin Vieweg <armin@v.ieweg.de>
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -97,15 +97,7 @@ class Tinysource
     private function makeTiny(string $source, string $type) : string
     {
         // Get replacements
-        $replacements = [];
-
-        if ($this->conf[$type]['stripTabs']) {
-            $replacements[] = "\t";
-        }
-        if ($this->conf[$type]['stripNewLines']) {
-            $replacements[] = "\n";
-            $replacements[] = "\r";
-        }
+        $replacements = ["\t", "\n", "\r"];
 
         // Protect whitespace sensitive code
         $source = $this->protectCode($source, $type);
@@ -124,19 +116,10 @@ class Tinysource
         }
 
         // Strip double spaces
-        if ($this->conf[$type]['stripDoubleSpaces']) {
-            $source = preg_replace('/( {2,})/', ' ', $source);
-        }
-
-        // Strip spaces between tags (also done in one line mode)
-        if ($this->conf[$type]['stripSpacesBetweenTags']) {
-            $source = str_replace('> <', '><', $source);
-        }
+        $source = preg_replace('/( {2,})/', ' ', $source);
 
         // Strip two or more line breaks to one
-        if ($this->conf[$type]['stripNewLines'] && $this->conf[$type]['stripTwoLinesToOne']) {
-            $source = preg_replace('/(\n{2,})/i', "\n", $source);
-        }
+        $source = preg_replace('/(\n{2,})/i', "\n", $source);
 
         if ($this->conf[$type]['removeTypeInScriptTags']) {
             $source = str_replace(

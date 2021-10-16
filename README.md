@@ -8,7 +8,9 @@ EXT:min uses the great package [matthiasmullie/minify](https://packagist.org/pac
 the functionality of tinysource extension, which makes tinysource deprecated.
 
 
-## Version 2.0 Roadmap
+## Roadmaps
+
+### v2.0
 
 - [X] Convert README to Markdown
 - [X] Add [DDEV for TYPO3 extensions](https://github.com/a-r-m-i-n/ddev-for-typo3-extensions)
@@ -16,19 +18,23 @@ the functionality of tinysource extension, which makes tinysource deprecated.
   - [X] Provide DDEV command to update TER dependencies
 - [X] Drop support for all TYPO3 CMS versions below 10.4
 - [X] Raise PHP requirement to `"^7.4 || ^8.0"`
-- [ ] TYPO3 CMS 11 LTS Support
+- [X] TYPO3 CMS 11 LTS Support
 - [X] Remove automatic TypoScript inclusion (provide static template instead)
 - [X] Provide ?debug=1 TypoScript configuration and enable TYPO3's compression flags
-- [ ] Remove options `stripTabs`, `stripNewLines`, `stripDoubleSpaces`, `stripTwoLinesToOne` and enable them always
-- [ ] Remove option `stripSpacesBetweenTags`
-- [ ] Provide optional CSS/JS compression for [assets](https://docs.typo3.org/other/typo3/view-helper-reference/master/en-us/typo3/fluid/latest/Asset/Index.html)
-  - [ ] Add new options to `plugin.tx_min.` for this 
+- [X] **Tinysource**
+  - [X] Remove options `stripTabs`, `stripNewLines`, `stripDoubleSpaces`, `stripTwoLinesToOne` and enable them always
+  - [X] Remove option `stripSpacesBetweenTags`
 - [ ] Write documentation
 - [ ] Update README contents
 - [ ] Update extension icon (?)
 - [ ] Move git repository to https://github.com/a-r-m-i-n/min
   - [ ] Update URL on packagist
 - [ ] Provide GitHub Action to build and deploy a new TER release
+
+### v2.1
+
+- [ ] Provide optional CSS/JS compression for [assets](https://docs.typo3.org/other/typo3/view-helper-reference/master/en-us/typo3/fluid/latest/Asset/Index.html)
+  - [ ] Add new options to `plugin.tx_min.` for this
 
 
 
