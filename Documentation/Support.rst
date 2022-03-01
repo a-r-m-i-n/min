@@ -1,10 +1,15 @@
-.. include:: ../Includes.txt
+.. include:: Includes.txt
 
 .. _support:
 
 
 Support
 =======
+
+Issues
+------
+In case you have problems, questions, feature requests or improvements for EXT:min, check out the [issues section](https://github.com/a-r-m-i-n/min/issues) on Github.
+
 
 Donate
 ------

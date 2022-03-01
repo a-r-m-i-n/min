@@ -4,7 +4,7 @@
 .. _start:
 
 =============================================================
-Example Extension (for DDEV for TYPO3 extensions)
+EXT:min - Minifier for TYPO3 CMS
 =============================================================
 
 .. only:: html
@@ -25,7 +25,7 @@ Example Extension (for DDEV for TYPO3 extensions)
 		TYPO3 CMS, minifier, minify, compress, optimize, output
 
 	:Copyright:
-		2016-2021
+		2016-2022
 
 	:Author:
 		Armin Vieweg
@@ -50,4 +50,7 @@ Example Extension (for DDEV for TYPO3 extensions)
         :maxdepth: 2
         :titlesonly:
 
-        Support/Index
+        Welcome
+        Installation
+        Configuration
+        Support
