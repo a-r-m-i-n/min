@@ -46,9 +46,9 @@ class Tinysource
      */
     public function tinysource(&$params, &$obj)
     {
-        $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'];
+        $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'] ?? [];
 
-        if ($this->conf['enable'] && !$GLOBALS['TSFE']->config['config']['disableAllHeaderCode']) {
+        if (($this->conf['enable'] ?? false) && !$GLOBALS['TSFE']->config['config']['disableAllHeaderCode']) {
             $source = $GLOBALS['TSFE']->content;
 
             $headOffset = strpos($source, '<head');
@@ -106,7 +106,7 @@ class Tinysource
         $source = str_replace($replacements, ' ', $source);
 
         // Strip comments (only for <body>)
-        if ($this->conf[$type]['stripComments'] && $type === self::TINYSOURCE_BODY) {
+        if (($this->conf[$type]['stripComments'] ?? false) && $type === self::TINYSOURCE_BODY) {
             // Prevent Strip of Search Comment if preventStripOfSearchComment is true
             if ($this->conf[$type]['preventStripOfSearchComment']) {
                 $source = $this->keepTypo3SearchTagAndStripHtmlComments($source);
@@ -121,7 +121,7 @@ class Tinysource
         // Strip two or more line breaks to one
         $source = preg_replace('/(\n{2,})/i', "\n", $source);
 
-        if ($this->conf[$type]['removeTypeInScriptTags']) {
+        if ($this->conf[$type]['removeTypeInScriptTags'] ?? false) {
             $source = str_replace(
                 [
                     ' type="text/javascript"',
