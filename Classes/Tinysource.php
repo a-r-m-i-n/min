@@ -78,7 +78,7 @@ class Tinysource
 
                 $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
                 if ($this->conf['oneLineMode']) {
-                    $source = $this->protectCode($GLOBALS['TSFE']->content, '');
+                    $source = $this->protectCode($GLOBALS['TSFE']->content);
                     $source = str_replace(['> <', '" />'], ['><', '"/>'], $source);
                     $GLOBALS['TSFE']->content = $this->restoreProtectedCode($source);
                 }
@@ -100,7 +100,7 @@ class Tinysource
         $replacements = ["\t", "\n", "\r"];
 
         // Protect whitespace sensitive code
-        $source = $this->protectCode($source, $type);
+        $source = $this->protectCode($source);
 
         // Do replacements
         $source = str_replace($replacements, ' ', $source);
@@ -186,12 +186,11 @@ class Tinysource
      * Protects code from making it tiny
      *
      * @param string $source which contains the code you want to protect
-     * @param string $type
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode(string $source, string $type) : string
+    protected function protectCode(string $source) : string
     {
-        $expressions = array_merge($this->conf['protectCode.'] ?? [], $this->conf[$type]['protectCode.'] ?? []);
+        $expressions = $this->conf['protectCode.'] ?? [];
         if (!empty($expressions)) {
             foreach ($expressions as $protectedCodeExpression) {
                 preg_match_all($protectedCodeExpression, $source, $match);

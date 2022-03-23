@@ -33,6 +33,7 @@ Roadmap / Missing Features
 
 - Support for `AssetCollector`_
 - Merge prototype `css_coverage`_ into EXT:min
+- Provide unit tests, to ensure correct minification results
 
 .. _AssetCollector: https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/10.3/Feature-90522-IntroduceAssetCollector.html
 .. _css_coverage: https://github.com/a-r-m-i-n/css-coverage
