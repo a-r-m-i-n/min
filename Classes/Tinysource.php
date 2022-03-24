@@ -48,7 +48,7 @@ class Tinysource
     {
         $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'] ?? [];
 
-        if (($this->conf['enable'] ?? false) && !$GLOBALS['TSFE']->config['config']['disableAllHeaderCode']) {
+        if (($this->conf['enable'] ?? false) && !($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false)) {
             $source = $GLOBALS['TSFE']->content;
 
             $headOffset = strpos($source, '<head');
@@ -70,14 +70,14 @@ class Tinysource
                 $head = $this->makeTiny($head, self::TINYSOURCE_HEAD);
                 $body = $this->makeTiny($body, self::TINYSOURCE_BODY);
 
-                if ($this->conf['oneLineMode']) {
+                if ($this->conf['oneLineMode'] ?? false) {
                     $beforeHead = $this->makeTiny($beforeHead, self::TINYSOURCE_HEAD);
                     $afterHead = $this->makeTiny($afterHead, self::TINYSOURCE_HEAD);
                     $afterBody = $this->makeTiny($afterBody, self::TINYSOURCE_BODY);
                 }
 
                 $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
-                if ($this->conf['oneLineMode']) {
+                if ($this->conf['oneLineMode'] ?? false) {
                     $source = $this->protectCode($GLOBALS['TSFE']->content);
                     $source = str_replace(['> <', '" />'], ['><', '"/>'], $source);
                     $GLOBALS['TSFE']->content = $this->restoreProtectedCode($source);
@@ -108,7 +108,7 @@ class Tinysource
         // Strip comments (only for <body>)
         if (($this->conf[$type]['stripComments'] ?? false) && $type === self::TINYSOURCE_BODY) {
             // Prevent Strip of Search Comment if preventStripOfSearchComment is true
-            if ($this->conf[$type]['preventStripOfSearchComment']) {
+            if ($this->conf[$type]['preventStripOfSearchComment'] ?? null) {
                 $source = $this->keepTypo3SearchTagAndStripHtmlComments($source);
             } else {
                 $source = $this->stripHtmlComments($source);
@@ -214,7 +214,7 @@ class Tinysource
      */
     protected function restoreProtectedCode(string $source) : string
     {
-        if (\is_array($this->conf['protectCode.']) && !empty($this->conf['protectCode.'])) {
+        if (\is_array($this->conf['protectCode.'] ?? null) && !empty($this->conf['protectCode.'] ?? [])) {
             foreach ($this->protectedCode as $key => $code) {
                 $source = str_replace($key, $code, $source);
             }
