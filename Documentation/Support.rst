@@ -8,9 +8,8 @@ Support
 
 Issues
 ------
-In case you have problems, questions, feature requests or improvements for EXT:min, check out the `issues section`_ on Github.
+In case you have problems, questions, feature requests or improvements for EXT:min, check out the `issues section <https://github.com/a-r-m-i-n/min/issues>`__ on Github.
 
-.. _issues section: https://github.com/a-r-m-i-n/min/issues
 
 Donate
 ------
