@@ -19,7 +19,7 @@ plugin.tx_min.tinysource {
 	oneLineMode = 1
 }
 
-[getTSFE() && getTSFE().isBackendUserLoggedIn() && request.getQueryParams()['debug'] > 0]
+[getTSFE() && getTSFE().isBackendUserLoggedIn() && traverse(request.getQueryParams(), 'debug') > 0]
 	plugin.tx_min.tinysource.enable = 0
 	config {
 		linkVars := addToList(debug(1))
