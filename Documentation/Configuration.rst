@@ -43,6 +43,23 @@ To enable the asset compression of TYPO3, as well as of EXT:min just add this to
 	}
 
 
+AssetCollector compression
+--------------------------
+
+Since version 2.1 assets added by the ``AssetCollector`` are also minified (but not concatenated).
+You can enable/disable the compression of AssetCollector assets. By default it is enabled:
+
+
+.. code-block:: typoscript
+
+	plugin.tx_min.assetCollector {
+		compressCss = 1
+		compressInlineCss = 1
+		compressJs = 1
+		compressInlineJs = 1
+	}
+
+
 HTML source compression
 -----------------------
 

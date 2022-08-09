@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    T3\Min\Minifier:
+        public: false
+
+    T3\Min\EventListener\AssetRendererEventListener:
+        tags:
+            -   name: event.listener
+                identifier: 'ext-min-css'
+                event: TYPO3\CMS\Core\Page\Event\BeforeStylesheetsRenderingEvent
+                method: beforeStyleSheetsRendering
+            -   name: event.listener
+                identifier: 'ext-min-js'
+                event: TYPO3\CMS\Core\Page\Event\BeforeJavaScriptsRenderingEvent
+                method: beforeJavaScriptsRendering

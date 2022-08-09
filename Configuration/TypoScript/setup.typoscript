@@ -5,6 +5,13 @@ config {
 	concatenateJs = 1
 }
 
+plugin.tx_min.assetCollector {
+	compressCss = 1
+	compressInlineCss = 1
+	compressJs = 1
+	compressInlineJs = 1
+}
+
 plugin.tx_min.tinysource {
 	enable = 1
 	body {

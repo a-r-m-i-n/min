@@ -17,15 +17,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Minifier
 {
-    const TYPE_STYLESHEET = 'CSS';
-    const TYPE_JAVASCRIPT = 'JS';
+    public const TYPE_STYLESHEET = 'CSS';
+    public const TYPE_JAVASCRIPT = 'JS';
 
     /**
      * Minifier constructor
      */
     public function __construct()
     {
-        if (!class_exists('\MatthiasMullie\Minify\Minify')) {
+        if (!class_exists(Minify\Minify::class)) {
             require_once(GeneralUtility::getFileAbsFileName('EXT:min/Resources/Private/PHP/vendor/autoload.php'));
         }
     }
@@ -36,11 +36,11 @@ class Minifier
      * @param array $parameters
      * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
-    public function minifyJavaScript(array &$parameters)
+    public function minifyJavaScript(array &$parameters): void
     {
-        $parameters['jsLibs'] = $this->minifyFiles($parameters['jsLibs'], self::TYPE_JAVASCRIPT);
-        $parameters['jsFiles'] = $this->minifyFiles($parameters['jsFiles'], self::TYPE_JAVASCRIPT);
-        $parameters['jsFooterFiles'] = $this->minifyFiles($parameters['jsFooterFiles'], self::TYPE_JAVASCRIPT);
+        $parameters['jsLibs'] = $this->minifyFiles($parameters['jsLibs']);
+        $parameters['jsFiles'] = $this->minifyFiles($parameters['jsFiles']);
+        $parameters['jsFooterFiles'] = $this->minifyFiles($parameters['jsFooterFiles']);
         $parameters['jsInline'] = $this->minifyFiles($parameters['jsInline'], self::TYPE_JAVASCRIPT, true);
         $parameters['jsFooterInline'] = $this->minifyFiles($parameters['jsFooterInline'], self::TYPE_JAVASCRIPT, true);
     }
@@ -51,7 +51,7 @@ class Minifier
      * @param array $parameters
      * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
-    public function minifyStylesheet(array &$parameters)
+    public function minifyStylesheet(array &$parameters): void
     {
         $parameters['cssLibs'] = $this->minifyFiles($parameters['cssLibs'], self::TYPE_STYLESHEET);
         $parameters['cssFiles'] = $this->minifyFiles($parameters['cssFiles'], self::TYPE_STYLESHEET);
@@ -61,15 +61,19 @@ class Minifier
     /**
      * Minifies given files
      *
-     * @param array $files file or inline code configuration. if file, key contains the path.
+     * @param array $files file or inline code configuration. if "file", key contains the path.
      * @param string $type see constants in this class (JS or CSS)
-     * @param bool $isInline
-     * @return array
+     * @param bool $isInline Handles and returns minified code instead of file paths
+     * @param bool $isAssetCollector
+     * @return array Minified result array
      */
-    public function minifyFiles(array &$files, $type = self::TYPE_JAVASCRIPT, $isInline = false)
-    {
+    public function minifyFiles(
+        array $files,
+        string $type = self::TYPE_JAVASCRIPT,
+        bool $isInline = false,
+        bool $isAssetCollector = false
+    ): array {
         $filesAfterCompression = [];
-        $useGzip = \extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel'];
         $minifierClassName = '\\MatthiasMullie\\Minify\\' . $type;
 
         foreach ($files as $key => $config) {
@@ -99,49 +103,63 @@ class Minifier
             }
 
             // Process with file and build target filename for minified result
-            if (!Compatibility::isTypo3Version()) {
-                $pathSite = PATH_site;
-            } else {
-                $pathSite = Environment::getPublicPath() . DIRECTORY_SEPARATOR;
-            }
-            /** @var Helper\ResourceCompressorPath $compressorPath */
-            $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
-            if (!is_dir($pathSite . $compressorPath)) {
-                GeneralUtility::mkdir($pathSite . $compressorPath);
-            }
-            $pathinfo = pathinfo($config['file']);
-            $targetFilename = $compressorPath . $pathinfo['filename'] . '-min.' . $pathinfo['extension'];
-
-            if ($useGzip) {
-                $targetFilename .= '.gzip';
-            }
+            $sitePath = $this->getSitePath();
+            $targetFilename = $this->generateTargetFilename($config['file']);
 
             // Compress the file
             /** @var Minify\CSS|Minify\JS $minifier */
             $minifier = new $minifierClassName();
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions([]);
-                $minifier->add($this->compressCss(file_get_contents($config['file'])));
+                $minifier->add($this->compressCss(file_get_contents(GeneralUtility::getFileAbsFileName($config['file']))));
             } else {
                 $minifier->add($config['file']);
             }
 
-            if (!file_exists($pathSite . $targetFilename)) {
-                if ($useGzip) {
-                    $minifier->gzip(
-                        $pathSite . $targetFilename,
-                        $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['compressionLevel']
-                    );
-                } else {
-                    $minifier->minify($pathSite . $targetFilename);
-                }
+            if ($this->isGzipUsageEnabled()) {
+                $minifier->gzip(
+                    $sitePath . $targetFilename,
+                    $GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']
+                );
+            } else {
+                $minifier->minify($sitePath . $targetFilename);
             }
+
             $config['compress'] = false;
             $config['file'] = $targetFilename;
 
-            $filesAfterCompression[$targetFilename] = $config;
+            $filesAfterCompression[$isAssetCollector ? $key : $targetFilename] = $config;
         }
         return $filesAfterCompression;
+    }
+
+    protected function isGzipUsageEnabled(): bool
+    {
+        return \extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel'];
+    }
+
+    protected function getSitePath(): string
+    {
+        if (!Compatibility::isTypo3Version()) {
+            return PATH_site;
+        }
+        return Environment::getPublicPath() . DIRECTORY_SEPARATOR;
+    }
+
+    protected function generateTargetFilename(string $filepath): string
+    {
+        /** @var Helper\ResourceCompressorPath $compressorPath */
+        $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
+        if (!is_dir($this->getSitePath() . $compressorPath)) {
+            GeneralUtility::mkdir($this->getSitePath() . $compressorPath);
+        }
+        $pathInfo = pathinfo($filepath);
+        $targetFilename = $compressorPath . $pathInfo['filename'] . '-min.' . $pathInfo['extension'];
+
+        if ($this->isGzipUsageEnabled()) {
+            $targetFilename .= '.gzip';
+        }
+        return $targetFilename;
     }
 
     /**
