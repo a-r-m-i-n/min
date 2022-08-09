@@ -4,7 +4,7 @@ namespace T3\Min;
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2016-2020 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2016-2022 Armin Vieweg <info@v.ieweg.de>
  */
 use \MatthiasMullie\Minify;
 use TYPO3\CMS\Core\Core\Environment;
