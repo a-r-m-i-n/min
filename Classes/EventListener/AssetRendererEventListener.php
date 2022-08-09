@@ -101,6 +101,13 @@ class AssetRendererEventListener
         }
     }
 
+    /**
+     * Converts given assets to Minifier array. Also removes file paths from instruction set, which are not existing.
+     *
+     * @param array $sources
+     * @param AbstractBeforeAssetRenderingEvent $event
+     * @return array
+     */
     private function buildMinifierAssetsArray(array $sources, AbstractBeforeAssetRenderingEvent $event): array
     {
         $assets = [];
@@ -109,13 +116,19 @@ class AssetRendererEventListener
                 continue;
             }
 
-            $assets[$uniqueIdentifier] = [
-                'compress' => true,
-            ];
             if ($event->isInline()) {
-                $assets[$uniqueIdentifier]['code'] = $asset['source'];
+                $assets[$uniqueIdentifier] = [
+                    'compress' => true,
+                    'code' => $asset['source']
+                ];
             } else {
-                $assets[$uniqueIdentifier]['file'] = GeneralUtility::getFileAbsFileName($asset['source']);
+                $path = GeneralUtility::getFileAbsFileName($asset['source']);
+                if ($path && file_exists($path)) {
+                    $assets[$uniqueIdentifier] = [
+                        'compress' => true,
+                        'file' => $path
+                    ];
+                }
             }
         }
 
