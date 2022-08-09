@@ -23,6 +23,11 @@ class ResourceCompressorPath extends ResourceCompressor
         // Do nothing (on purpose)
     }
 
+    public function fixRelativeUrlPathsInCssCode(string $code, string $filename): string
+    {
+        return $this->cssFixRelativeUrlPaths($code, $filename);
+    }
+
     /**
      * @return string
      */

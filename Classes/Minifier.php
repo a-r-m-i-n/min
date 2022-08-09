@@ -7,6 +7,7 @@ namespace T3\Min;
  *  | (c) 2016-2022 Armin Vieweg <info@v.ieweg.de>
  */
 use \MatthiasMullie\Minify;
+use T3\Min\Helper\ResourceCompressorPath;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -20,6 +21,8 @@ class Minifier
     public const TYPE_STYLESHEET = 'CSS';
     public const TYPE_JAVASCRIPT = 'JS';
 
+    protected ResourceCompressorPath $resourceCompressor;
+
     /**
      * Minifier constructor
      */
@@ -28,6 +31,7 @@ class Minifier
         if (!class_exists(Minify\Minify::class)) {
             require_once(GeneralUtility::getFileAbsFileName('EXT:min/Resources/Private/PHP/vendor/autoload.php'));
         }
+        $this->resourceCompressor = GeneralUtility::makeInstance(ResourceCompressorPath::class);
     }
 
     /**
@@ -109,11 +113,17 @@ class Minifier
             // Compress the file
             /** @var Minify\CSS|Minify\JS $minifier */
             $minifier = new $minifierClassName();
+            $sourceFilePath = GeneralUtility::getFileAbsFileName($config['file']);
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions([]);
-                $minifier->add($this->compressCss(file_get_contents(GeneralUtility::getFileAbsFileName($config['file']))));
+                $cssCode = $this->compressCss(file_get_contents($sourceFilePath));
+                if (!$isInline) {
+                    $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
+                    $cssCode = $this->resourceCompressor->fixRelativeUrlPathsInCssCode($cssCode, $relativeSourceFilePath);
+                }
+                $minifier->add($cssCode);
             } else {
-                $minifier->add($config['file']);
+                $minifier->add($sourceFilePath);
             }
 
             if ($this->isGzipUsageEnabled()) {
@@ -148,8 +158,7 @@ class Minifier
 
     protected function generateTargetFilename(string $filepath): string
     {
-        /** @var Helper\ResourceCompressorPath $compressorPath */
-        $compressorPath = (string) GeneralUtility::makeInstance(Helper\ResourceCompressorPath::class);
+        $compressorPath = (string) $this->resourceCompressor;
         if (!is_dir($this->getSitePath() . $compressorPath)) {
             GeneralUtility::mkdir($this->getSitePath() . $compressorPath);
         }
