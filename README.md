@@ -1,11 +1,18 @@
-# Minifier extension for TYPO3 CMS (EXT:min)
+# Minifier for TYPO3 CMS (EXT:min | t3/min)
 
-This minifier extension compresses TYPO3 frontend output in several ways:
+The ``t3/min`` extension compresses the TYPO3 CMS frontend output in several ways:
 
 - It minifies CSS and JS assets (TYPO3 "only" compresses them), which can save you an extra 60% of file size.
+  - Including files added to [AssetCollector](https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/10.3/Feature-90522-IntroduceAssetCollector.html)
 - It compresses the HTML output for each page to a single line (formerly known as ``EXT:tinysource``).
 
 To achieve this, the great package [matthiasmullie/minify](https://github.com/matthiasmullie/minify) is used. 
+
+
+## Requirements 
+
+- PHP 7.4 or higher
+- TYPO3 10.4 or 11.5
 
 
 ## Documentation

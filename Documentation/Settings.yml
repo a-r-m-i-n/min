@@ -7,8 +7,8 @@
 conf.py:
   copyright: 2016-2022
   project: EXT:min - Minifier for TYPO3 CMS
-  version: 2.0
-  release: 2.0.3
+  version: 2.1
+  release: 2.1.0
   latex_documents:
   - - Index
     - min.tex
