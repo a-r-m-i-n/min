@@ -20,20 +20,14 @@ EXT:min uses the great `matthiasmullie/minify`_ package.
 Features
 --------
 
-- Additional minification of JS and CSS assets
+- Additional minification of JS and CSS assets (including files in AssetCollector)
 - HTML output compression
 - Highly configurable
 - Full composer support
-
-Since version 1.1 the extension tinysource has been merged and you can also minify html output of TYPO3.
+- Alternative TER version (with *minify* library included)
 
 
 Roadmap / Missing Features
 --------------------------
 
-- Support for `AssetCollector`_
-- Merge prototype `css_coverage`_ into EXT:min
 - Provide unit tests, to ensure correct minification results
-
-.. _AssetCollector: https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/10.3/Feature-90522-IntroduceAssetCollector.html
-.. _css_coverage: https://github.com/a-r-m-i-n/css-coverage

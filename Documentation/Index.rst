@@ -54,3 +54,4 @@ EXT:min - Minifier for TYPO3 CMS
         Installation
         Configuration
         Support
+        Versions
