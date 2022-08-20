@@ -112,7 +112,7 @@ class AssetRendererEventListener
     {
         $assets = [];
         foreach ($sources as $uniqueIdentifier => $asset) {
-            if ($event->isPriority() !== $asset['options']['priority']) {
+            if (!isset($asset['options']['priority']) || $event->isPriority() !== $asset['options']['priority']) {
                 continue;
             }
 
