@@ -116,15 +116,8 @@ class Minifier
             $sourceFilePath = GeneralUtility::getFileAbsFileName($config['file']);
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions([]);
-                $cssCode = $this->compressCss(file_get_contents($sourceFilePath));
-                if (!$isInline) {
-                    $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
-                    $cssCode = $this->resourceCompressor->fixRelativeUrlPathsInCssCode($cssCode, $relativeSourceFilePath);
-                }
-                $minifier->add($cssCode);
-            } else {
-                $minifier->add($sourceFilePath);
             }
+            $minifier->add($sourceFilePath);
 
             if ($this->isGzipUsageEnabled()) {
                 $minifier->gzip(
@@ -133,6 +126,15 @@ class Minifier
                 );
             } else {
                 $minifier->minify($sitePath . $targetFilename);
+
+                if ($type === self::TYPE_STYLESHEET) {
+                    $minifiedCss = file_get_contents($sitePath . $targetFilename);
+                    if (!$isInline) {
+                        $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
+                        $minifiedCss = $this->resourceCompressor->fixRelativeUrlPathsInCssCode($minifiedCss, $relativeSourceFilePath);
+                    }
+                    file_put_contents($sitePath . $targetFilename, $this->compressCss($minifiedCss));
+                }
             }
 
             $config['compress'] = false;
