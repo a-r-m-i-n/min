@@ -6,7 +6,7 @@ namespace T3\Min\EventListener;
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2022 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2022-2023 Armin Vieweg <info@v.ieweg.de>
  */
 use T3\Min\Minifier;
 use TYPO3\CMS\Core\Page\Event\AbstractBeforeAssetRenderingEvent;

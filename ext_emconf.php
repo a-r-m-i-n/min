@@ -3,7 +3,7 @@
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2016-2022 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2016-2023 Armin Vieweg <info@v.ieweg.de>
  */
 
 // phpcs:disable
