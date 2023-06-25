@@ -31,7 +31,7 @@ class ResourceCompressorPath extends ResourceCompressor
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->targetDirectory;
     }

@@ -7,6 +7,13 @@ services:
     T3\Min\Minifier:
         public: false
 
+    T3\Min\EventListener\TinysourceEventListener:
+        tags:
+            - name: event.listener
+              identifier: 'ext-min-content-modifier'
+              event: TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent
+              method: tinysource
+
     T3\Min\EventListener\AssetRendererEventListener:
         tags:
             -   name: event.listener

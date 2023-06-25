@@ -152,9 +152,6 @@ class Minifier
 
     protected function getSitePath(): string
     {
-        if (!Compatibility::isTypo3Version()) {
-            return PATH_site;
-        }
         return Environment::getPublicPath() . DIRECTORY_SEPARATOR;
     }
 
@@ -180,7 +177,7 @@ class Minifier
      * @return string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCss(string $contents) : string
+    protected function compressCss(string $contents): string
     {
         $contents = str_replace(CR, '', $contents);
         // Strip any and all carriage returns.
@@ -223,7 +220,7 @@ class Minifier
      * @return string the compressed string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCssPregCallback(array $matches) : string
+    protected function compressCssPregCallback(array $matches): string
     {
         if ($matches[1]) {
             // Group 1: Double quoted string.

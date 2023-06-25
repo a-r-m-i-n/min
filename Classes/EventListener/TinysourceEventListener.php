@@ -1,5 +1,5 @@
 <?php
-namespace T3\Min;
+namespace T3\Min\EventListener;
 
 /*  | This extension is made with love for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
@@ -8,13 +8,14 @@ namespace T3\Min;
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent;
 
 /**
  * Class Tinysource
  *
  * @package T3\Min
  */
-class Tinysource
+class TinysourceEventListener
 {
     /**
      * @var array Configuration of tx_tinysource
@@ -37,19 +38,18 @@ class Tinysource
     const TINYSOURCE_BODY = 'body.';
 
     /**
-     * Method called by "contentPostProc-all" TYPO3 core hook.
+     * Method is registered in extension "Services.yaml" and is a replacement of "contentPostProc-all" TYPO3 core hook.
      * It checks the typoscript configuration and do the minify of source code.
      *
-     * @param mixed $params
-     * @param mixed $obj
+     * @param mixed $content
      * @return void
      */
-    public function tinysource(&$params, &$obj)
+    public function tinysource(AfterCacheableContentIsGeneratedEvent $event): void
     {
         $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'] ?? [];
 
         if (($this->conf['enable'] ?? false) && !($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false)) {
-            $source = $GLOBALS['TSFE']->content;
+            $source = $event->getController()->content;
 
             $headOffset = strpos($source, '<head');
             $headEndOffset = strpos($source, '>', $headOffset);
@@ -76,11 +76,11 @@ class Tinysource
                     $afterBody = $this->makeTiny($afterBody, self::TINYSOURCE_BODY);
                 }
 
-                $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
+                $event->getController()->content = $beforeHead . $head . $afterHead . $body . $afterBody;
                 if ($this->conf['oneLineMode'] ?? false) {
-                    $source = $this->protectCode($GLOBALS['TSFE']->content);
+                    $source = $this->protectCode($event->getController()->content);
                     $source = str_replace(['> <', '" />'], ['><', '"/>'], $source);
-                    $GLOBALS['TSFE']->content = $this->restoreProtectedCode($source);
+                    $event->getController()->content = $this->restoreProtectedCode($source);
                 }
             }
         }
@@ -94,7 +94,7 @@ class Tinysource
      * @param string $type BODY or HEAD
      * @return string the tiny source code
      */
-    private function makeTiny(string $source, string $type) : string
+    private function makeTiny(string $source, string $type): string
     {
         // Get replacements
         $replacements = ["\t", "\n", "\r"];
@@ -142,7 +142,7 @@ class Tinysource
      * @param string $source
      * @return string source without html comments, except TYPO3SEARCH comments
      */
-    protected function keepTypo3SearchTagAndStripHtmlComments(string $source) : string
+    protected function keepTypo3SearchTagAndStripHtmlComments(string $source): string
     {
         $originalSearchTagBegin = '<!--TYPO3SEARCH_begin-->';
         $originalSearchTagEnd = '<!--TYPO3SEARCH_end-->';
@@ -170,7 +170,7 @@ class Tinysource
      * @param string $source
      * @return string source without html comments
      */
-    protected function stripHtmlComments(string $source) : string
+    protected function stripHtmlComments(string $source): string
     {
         $source = preg_replace(
             '/<\!\-\-(?!INT_SCRIPT\.)(?!HD_)(?!TDS_)(?!FD_)(?!CSS_INCLUDE_)(?!CSS_INLINE_)(?!JS_LIBS)' .
@@ -188,7 +188,7 @@ class Tinysource
      * @param string $source which contains the code you want to protect
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode(string $source) : string
+    protected function protectCode(string $source): string
     {
         $expressions = $this->conf['protectCode.'] ?? [];
         if (!empty($expressions)) {
@@ -212,7 +212,7 @@ class Tinysource
      * @param string $source with placeholders
      * @return string
      */
-    protected function restoreProtectedCode(string $source) : string
+    protected function restoreProtectedCode(string $source): string
     {
         if (\is_array($this->conf['protectCode.'] ?? null) && !empty($this->conf['protectCode.'] ?? [])) {
             foreach ($this->protectedCode as $key => $code) {
