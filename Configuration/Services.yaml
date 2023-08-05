@@ -4,6 +4,9 @@ services:
         autoconfigure: true
         public: false
 
+    T3\Min\:
+        resource: '../Classes/*'
+
     T3\Min\Minifier:
         public: false
 
@@ -17,3 +20,9 @@ services:
                 identifier: 'ext-min-js'
                 event: TYPO3\CMS\Core\Page\Event\BeforeJavaScriptsRenderingEvent
                 method: beforeJavaScriptsRendering
+
+    T3\Min\EventListener\TinysourceEventListener:
+        tags:
+            -   name: event.listener
+                identifier: 'ext-min-tinysource'
+                event: TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent
