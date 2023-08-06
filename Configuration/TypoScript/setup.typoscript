@@ -23,7 +23,6 @@ plugin.tx_min.tinysource {
 		10 = /(<textarea.*?>.*?<\/textarea>)/is
 		20 = /(<pre.*?>.*?<\/pre>)/is
 	}
-	oneLineMode = 1
 }
 
 [getTSFE() && getTSFE().isBackendUserLoggedIn() && traverse(request.getQueryParams(), 'debug') > 0]

@@ -16,41 +16,20 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class Tinysource
 {
-    /**
-     * @var array Configuration of tx_tinysource
-     */
-    public $conf = [];
-
-    /**
-     * @var array
-     */
-    protected $protectedCode = [];
-
-    /**
-     * @var string
-     */
     const TINYSOURCE_HEAD = 'head.';
-
-    /**
-     * @var string
-     */
     const TINYSOURCE_BODY = 'body.';
+    public array $conf = [];
+    protected array $protectedCode = [];
 
     /**
-     * Method called by "contentPostProc-all" TYPO3 core hook.
+     * Method called by TinysourceEventListener
      * It checks the typoscript configuration and do the minify of source code.
-     *
-     * @param mixed $params
-     * @param mixed $obj
-     * @return void
      */
-    public function tinysource(&$params, &$obj)
+    public function tinysource(string $source): string
     {
         $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'] ?? [];
 
         if (($this->conf['enable'] ?? false) && !($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false)) {
-            $source = $GLOBALS['TSFE']->content;
-
             $headOffset = strpos($source, '<head');
             $headEndOffset = strpos($source, '>', $headOffset);
             $closingHeadOffset = strpos($source, '</head>');
@@ -70,31 +49,25 @@ class Tinysource
                 $head = $this->makeTiny($head, self::TINYSOURCE_HEAD);
                 $body = $this->makeTiny($body, self::TINYSOURCE_BODY);
 
-                if ($this->conf['oneLineMode'] ?? false) {
-                    $beforeHead = $this->makeTiny($beforeHead, self::TINYSOURCE_HEAD);
-                    $afterHead = $this->makeTiny($afterHead, self::TINYSOURCE_HEAD);
-                    $afterBody = $this->makeTiny($afterBody, self::TINYSOURCE_BODY);
-                }
+                $beforeHead = $this->makeTiny($beforeHead, self::TINYSOURCE_HEAD);
+                $afterHead = $this->makeTiny($afterHead, self::TINYSOURCE_HEAD);
+                $afterBody = $this->makeTiny($afterBody, self::TINYSOURCE_BODY);
 
-                $GLOBALS['TSFE']->content = $beforeHead . $head . $afterHead . $body . $afterBody;
-                if ($this->conf['oneLineMode'] ?? false) {
-                    $source = $this->protectCode($GLOBALS['TSFE']->content);
-                    $source = str_replace(['> <', '" />'], ['><', '"/>'], $source);
-                    $GLOBALS['TSFE']->content = $this->restoreProtectedCode($source);
-                }
+                $source = $beforeHead . $head . $afterHead . $body . $afterBody;
+                $source = $this->protectCode($source);
+                $source = str_replace('" />', '"/>', $source);
+                $source = $this->restoreProtectedCode($source);
             }
         }
+
+        return $source;
     }
 
     /**
      * Gets the configuration and makes the source tiny, <head> and <body>
      * separated
-     *
-     * @param string $source
-     * @param string $type BODY or HEAD
-     * @return string the tiny source code
      */
-    private function makeTiny(string $source, string $type) : string
+    private function makeTiny(string $source, string $type): string
     {
         // Get replacements
         $replacements = ["\t", "\n", "\r"];
@@ -138,11 +111,8 @@ class Tinysource
 
     /**
      * Strips html comments from given string, but keep TYPO3SEARCH_ strings
-     *
-     * @param string $source
-     * @return string source without html comments, except TYPO3SEARCH comments
      */
-    protected function keepTypo3SearchTagAndStripHtmlComments(string $source) : string
+    protected function keepTypo3SearchTagAndStripHtmlComments(string $source): string
     {
         $originalSearchTagBegin = '<!--TYPO3SEARCH_begin-->';
         $originalSearchTagEnd = '<!--TYPO3SEARCH_end-->';
@@ -166,11 +136,8 @@ class Tinysource
 
     /**
      * Strips html comments from given string
-     *
-     * @param string $source
-     * @return string source without html comments
      */
-    protected function stripHtmlComments(string $source) : string
+    protected function stripHtmlComments(string $source): string
     {
         $source = preg_replace(
             '/<\!\-\-(?!INT_SCRIPT\.)(?!HD_)(?!TDS_)(?!FD_)(?!CSS_INCLUDE_)(?!CSS_INLINE_)(?!JS_LIBS)' .
@@ -188,7 +155,7 @@ class Tinysource
      * @param string $source which contains the code you want to protect
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode(string $source) : string
+    protected function protectCode(string $source): string
     {
         $expressions = $this->conf['protectCode.'] ?? [];
         if (!empty($expressions)) {
@@ -212,7 +179,7 @@ class Tinysource
      * @param string $source with placeholders
      * @return string
      */
-    protected function restoreProtectedCode(string $source) : string
+    protected function restoreProtectedCode(string $source): string
     {
         if (\is_array($this->conf['protectCode.'] ?? null) && !empty($this->conf['protectCode.'] ?? [])) {
             foreach ($this->protectedCode as $key => $code) {

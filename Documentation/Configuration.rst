@@ -78,7 +78,6 @@ Because of historical reasons, the configuration for HTML compression is located
 			10 = /(<textarea.*?>.*?<\/textarea>)/is
 			20 = /(<pre.*?>.*?<\/pre>)/is
 		}
-		oneLineMode = 1
 	}
 
 
@@ -90,7 +89,6 @@ body.stripComments_                    ``bool``     1
 body.preventStripOfSearchComment_      ``bool``     1
 body.removeTypeInScriptTags_           ``bool``     1
 protectCode_                           ``array``    *see below*
-oneLineMode_                           ``bool``     1
 ===================================== ============ ======================================
 
 .. _enable:
@@ -177,20 +175,3 @@ protectCode
    Description
       Allows to protect whitespace sensitive code from being touched, by using regular expressions.
       By default ``textarea`` and ``pre`` tags are protected.
-
-
-.. _oneLineMode:
-
-oneLineMode
-"""""""""""
-.. container:: table-row
-
-   Property
-      oneLineMode
-   Data type
-      bool
-   Default
-      1
-   Description
-      By default, TYPO3 outputs the sections (head, body) of HTML pages to separated lines (``"\n"``) in source.
-      With this option enabled, **all line-breaks** (except for protected code) will be removed, in HTML source.
