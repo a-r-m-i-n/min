@@ -13,8 +13,8 @@ You can install EXT:min like any other TYPO3 extension.
 Requirements
 ------------
 
-- PHP 7.4 or higher
-- TYPO3 10.4 or 11.5
+- PHP 8.1 or higher
+- TYPO3 12.4
 
 
 Setup

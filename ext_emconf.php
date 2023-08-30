@@ -7,7 +7,7 @@
  */
 
 // phpcs:disable
-$EM_CONF[$_EXTKEY] = [
+$EM_CONF['min'] = [
     'title' => 'Minifier for TYPO3 CMS',
     'description' => 'Extends TYPO3\'s compressor for JS and CSS with minifier. This may save you up to 70% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.',
     'category' => 'fe',
@@ -15,11 +15,11 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'info@v.ieweg.de',
     'author_company' => 'v.ieweg Webentwicklung',
     'state' => 'stable',
-    'version' => '2.1.2',
+    'version' => '3.0.0-dev',
     'constraints' => [
         'depends' => [
-            'php' => '7.4.0-0.0.0',
-            'typo3' => '10.4.0-11.5.99',
+            'php' => '8.1.0-0.0.0',
+            'typo3' => '12.4.0-12.4.99',
         ],
         'conflicts' => [],
         'suggests' => [],
