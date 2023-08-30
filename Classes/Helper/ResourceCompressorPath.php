@@ -28,10 +28,7 @@ class ResourceCompressorPath extends ResourceCompressor
         return $this->cssFixRelativeUrlPaths($code, $filename);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->targetDirectory;
     }

@@ -25,6 +25,7 @@ plugin.tx_min.tinysource {
 	}
 }
 
+# This disables all features of EXT:min and also the compression and concatenation features of the core itself.
 [getTSFE() && getTSFE().isBackendUserLoggedIn() && traverse(request.getQueryParams(), 'debug') > 0]
 	plugin.tx_min.tinysource.enable = 0
 	config {

@@ -23,7 +23,7 @@ class Tinysource
 
     /**
      * Method called by TinysourceEventListener
-     * It checks the typoscript configuration and do the minify of source code.
+     * It checks the typoscript configuration and do the minifying of source code.
      */
     public function tinysource(string $source): string
     {

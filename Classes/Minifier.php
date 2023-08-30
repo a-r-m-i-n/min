@@ -37,7 +37,6 @@ class Minifier
     /**
      * Method called by "jsCompressHandler"
      *
-     * @param array $parameters
      * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
     public function minifyJavaScript(array &$parameters): void
@@ -52,7 +51,6 @@ class Minifier
     /**
      * Method called by "cssCompressHandler"
      *
-     * @param array $parameters
      * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
     public function minifyStylesheet(array &$parameters): void
@@ -64,12 +62,6 @@ class Minifier
 
     /**
      * Minifies given files
-     *
-     * @param array $files file or inline code configuration. if "file", key contains the path.
-     * @param string $type see constants in this class (JS or CSS)
-     * @param bool $isInline Handles and returns minified code instead of file paths
-     * @param bool $isAssetCollector
-     * @return array Minified result array
      */
     public function minifyFiles(
         array $files,
@@ -152,9 +144,6 @@ class Minifier
 
     protected function getSitePath(): string
     {
-        if (!Compatibility::isTypo3Version()) {
-            return PATH_site;
-        }
         return Environment::getPublicPath() . DIRECTORY_SEPARATOR;
     }
 
@@ -176,17 +165,15 @@ class Minifier
     /**
      * Applies TYPO3's default minifier to CSS code
      *
-     * @param string $contents CSS code
-     * @return string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCss(string $contents) : string
+    protected function compressCss(string $cssCode) : string
     {
-        $contents = str_replace(CR, '', $contents);
+        $cssCode = str_replace(CR, '', $cssCode);
         // Strip any and all carriage returns.
         // Match and process strings, comments and everything else, one chunk at a time.
         // To understand this regex, read: "Mastering Regular Expressions 3rd Edition" chapter 6.
-        $compressedContents = preg_replace_callback(
+        $compressedCSS = preg_replace_callback(
             '%
 				# One-regex-to-rule-them-all! - version: 20100220_0100
 				# Group 1: Match a double quoted string.
@@ -203,24 +190,22 @@ class Minifier
 				([^/]*+(?:(?!\\*)/[^/]*+)*?)
 				%Ssx',
             [self::class, 'compressCssPregCallback'],
-            $contents
+            $cssCode
         );
 
         // Do it!
-        $compressedContents = preg_replace('/^\\s++/', '', $compressedContents);
+        $compressedCSS = preg_replace('/^\\s++/', '', $compressedCSS);
         // Strip leading whitespace.
-        $compressedContents = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", $compressedContents);
+        $compressedCSS = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", $compressedCSS);
         // Consolidate multi-lines space.
-        $compressedContents = preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedContents);
-        return $compressedContents;
+        $compressedCSS = preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedCSS);
+        return $compressedCSS;
     }
 
     /**
      * Callback function for preg_replace
      * Copy from TYPO3 CMS, where it is deprecated since version 7, and removed in version 8
      *
-     * @param array $matches
-     * @return string the compressed string
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
     protected function compressCssPregCallback(array $matches) : string
