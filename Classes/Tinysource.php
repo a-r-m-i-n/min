@@ -10,14 +10,13 @@ namespace T3\Min;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Class Tinysource
- *
- * @package T3\Min
+ * Minifies HTML output
  */
 class Tinysource
 {
-    const TINYSOURCE_HEAD = 'head.';
-    const TINYSOURCE_BODY = 'body.';
+    private const TINYSOURCE_HEAD = 'head.';
+    private const TINYSOURCE_BODY = 'body.';
+
     public array $conf = [];
     protected array $protectedCode = [];
 
@@ -112,10 +111,11 @@ class Tinysource
     /**
      * Strips html comments from given string, but keep TYPO3SEARCH_ strings
      */
-    protected function keepTypo3SearchTagAndStripHtmlComments(string $source): string
+    private function keepTypo3SearchTagAndStripHtmlComments(string $source): string
     {
         $originalSearchTagBegin = '<!--TYPO3SEARCH_begin-->';
         $originalSearchTagEnd = '<!--TYPO3SEARCH_end-->';
+
         $hash = StringUtility::getUniqueId('t3search_replacement_');
         $hashedSearchTagBegin = '$$$' . $hash . '_start$$$';
         $hashedSearchTagEnd = '$$$' . $hash . '_end$$$';
@@ -126,27 +126,26 @@ class Tinysource
             $source
         );
         $source = $this->stripHtmlComments($source);
-        $source = str_replace(
+
+        return str_replace(
             [$hashedSearchTagBegin, $hashedSearchTagEnd],
             [$originalSearchTagBegin, $originalSearchTagEnd],
             $source
         );
-        return $source;
     }
 
     /**
      * Strips html comments from given string
      */
-    protected function stripHtmlComments(string $source): string
+    private function stripHtmlComments(string $source): string
     {
-        $source = preg_replace(
+        return preg_replace(
             '/<\!\-\-(?!INT_SCRIPT\.)(?!HD_)(?!TDS_)(?!FD_)(?!CSS_INCLUDE_)(?!CSS_INLINE_)(?!JS_LIBS)' .
             '(?!JS_INCLUDE)(?!JS_INLINE)(?!HEADERDATA)(?!JS_LIBS_FOOTER)(?!JS_INCLUDE_FOOTER)' .
             '(?!JS_INLINE_FOOTER)(?!FOOTERDATA)(?!\s\#\#\#).*?\-\->/s',
             '',
             $source
         );
-        return $source;
     }
 
     /**
@@ -155,7 +154,7 @@ class Tinysource
      * @param string $source which contains the code you want to protect
      * @return string Given source, protected code parts are replaced by placeholders
      */
-    protected function protectCode(string $source): string
+    private function protectCode(string $source): string
     {
         $expressions = $this->conf['protectCode.'] ?? [];
         if (!empty($expressions)) {
@@ -170,6 +169,7 @@ class Tinysource
                 }
             }
         }
+
         return $source;
     }
 
@@ -179,7 +179,7 @@ class Tinysource
      * @param string $source with placeholders
      * @return string
      */
-    protected function restoreProtectedCode(string $source): string
+    private function restoreProtectedCode(string $source): string
     {
         if (\is_array($this->conf['protectCode.'] ?? null) && !empty($this->conf['protectCode.'] ?? [])) {
             foreach ($this->protectedCode as $key => $code) {

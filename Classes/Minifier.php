@@ -13,8 +13,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Minifier for JS and CSS
- *
- * @package T3\Min
+ * using "matthiasmullie/minify" library
  */
 class Minifier
 {
@@ -36,8 +35,6 @@ class Minifier
 
     /**
      * Method called by "jsCompressHandler"
-     *
-     * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
     public function minifyJavaScript(array &$parameters): void
     {
@@ -50,8 +47,6 @@ class Minifier
 
     /**
      * Method called by "cssCompressHandler"
-     *
-     * @internal param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer
      */
     public function minifyStylesheet(array &$parameters): void
     {
@@ -137,17 +132,17 @@ class Minifier
         return $filesAfterCompression;
     }
 
-    protected function isGzipUsageEnabled(): bool
+    private function isGzipUsageEnabled(): bool
     {
         return \extension_loaded('zlib') && $GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel'];
     }
 
-    protected function getSitePath(): string
+    private function getSitePath(): string
     {
         return Environment::getPublicPath() . DIRECTORY_SEPARATOR;
     }
 
-    protected function generateTargetFilename(string $filepath): string
+    private function generateTargetFilename(string $filepath): string
     {
         $compressorPath = (string) $this->resourceCompressor;
         if (!is_dir($this->getSitePath() . $compressorPath)) {
@@ -167,13 +162,13 @@ class Minifier
      *
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCss(string $cssCode) : string
+    private function compressCss(string $cssCode) : string
     {
         $cssCode = str_replace(CR, '', $cssCode);
         // Strip any and all carriage returns.
         // Match and process strings, comments and everything else, one chunk at a time.
         // To understand this regex, read: "Mastering Regular Expressions 3rd Edition" chapter 6.
-        $compressedCSS = preg_replace_callback(
+        $compressedCss = preg_replace_callback(
             '%
 				# One-regex-to-rule-them-all! - version: 20100220_0100
 				# Group 1: Match a double quoted string.
@@ -193,13 +188,11 @@ class Minifier
             $cssCode
         );
 
-        // Do it!
-        $compressedCSS = preg_replace('/^\\s++/', '', $compressedCSS);
-        // Strip leading whitespace.
-        $compressedCSS = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", $compressedCSS);
-        // Consolidate multi-lines space.
-        $compressedCSS = preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedCSS);
-        return $compressedCSS;
+        // Strip leading whitespace
+        $compressedCss = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", ltrim($compressedCss));
+
+        // Consolidate multi-lines space
+        return preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedCss);
     }
 
     /**
@@ -208,7 +201,7 @@ class Minifier
      *
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    protected function compressCssPregCallback(array $matches) : string
+    private function compressCssPregCallback(array $matches) : string
     {
         if ($matches[1]) {
             // Group 1: Double quoted string.
@@ -233,7 +226,7 @@ class Minifier
             $matches[6] = preg_replace('/([+>{}:;,(])\\s++/S', '$1', $matches[6]);
             // Clean post-punctuation.
             $matches[6] = preg_replace('/;?\\}/S', '}' . "\n", $matches[6]);
-            // Add a touch of formatting.
+
             return "\n" . '/*T2\\*/' . $matches[6] . "\n" . '/*T2E*/' . "\n";
         }
         if ($matches[8]) {
@@ -242,9 +235,9 @@ class Minifier
         }
         if (isset($matches[9])) {
             // Group 9: Non-string, non-comment. Safe to clean whitespace here.
-            $matches[9] = preg_replace('/^\\s++/', '', $matches[9]);
+            $matches[9] = ltrim($matches[9]);
             // Strip all leading whitespace.
-            $matches[9] = preg_replace('/\\s++$/', '', $matches[9]);
+            $matches[9] = rtrim($matches[9]);
             // Strip all trailing whitespace.
             $matches[9] = preg_replace('/\\s{2,}+/', ' ', $matches[9]);
             // Consolidate multiple whitespace.
@@ -253,9 +246,10 @@ class Minifier
             $matches[9] = preg_replace('/([+>{}:;,(])\\s++/S', '$1', $matches[9]);
             // Clean post-punctuation.
             $matches[9] = preg_replace('/;?\\}/S', '}' . "\n", $matches[9]);
-            // Add a touch of formatting.
+
             return $matches[9];
         }
+
         return $matches[0] . "\n" . '/* ERROR! Unexpected _proccess_css_minify() parameter */' . "\n";
     }
 }
