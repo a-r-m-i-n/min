@@ -136,8 +136,7 @@ body.preventStripOfSearchComment
    Default
       1
    Description
-      Prevents ``<!--TYPO3SEARCH_begin-->`` and ``<!--TYPO3SEARCH_end-->`` from being removed,
-	  when **stripComments** setting is enabled.
+      Prevents ``<!--TYPO3SEARCH_begin-->`` and ``<!--TYPO3SEARCH_end-->`` from being removed, when **stripComments** setting is enabled.
 
 
 .. _body.removeTypeInScriptTags:
@@ -174,4 +173,4 @@ protectCode
 
    Description
       Allows to protect whitespace sensitive code from being touched, by using regular expressions.
-      By default ``textarea`` and ``pre`` tags are protected.
+      ``textarea`` and ``pre`` tags are protected, by default.
