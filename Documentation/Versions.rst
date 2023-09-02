@@ -6,6 +6,15 @@
 Versions
 ========
 
+3.0.0
+-----
+
+- Added TYPO3 12 LTS support (dropped support for v10 and v11)
+- Bugfixes
+
+Thanks to **Benjamin Gries** and **Joel Mai** for supporting!
+
+
 2.1.0
 -----
 
