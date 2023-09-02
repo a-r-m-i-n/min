@@ -157,7 +157,7 @@ class Minifier
         $targetFilename = $compressorPath . $pathInfo['filename'] . '-min.' . $pathInfo['extension'];
 
         if ($this->isGzipUsageEnabled()) {
-            $targetFilename .= '.gzip';
+            $targetFilename .= '.gz';
         }
         return $targetFilename;
     }
