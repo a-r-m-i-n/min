@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace T3\Min\EventListener;
 
-/*  | This extension is made with love for TYPO3 CMS and is licensed
+/*  | This extension is made with ❤ for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
  *  | (c) 2022-2023 Armin Vieweg <info@v.ieweg.de>
