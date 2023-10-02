@@ -6,6 +6,12 @@
 Versions
 ========
 
+3.0.1
+-----
+
+- [TASK] Skip gzipped assets (**Thanks to Phil aka Pixeldasher**)
+
+
 3.0.0
 -----
 
