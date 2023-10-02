@@ -73,6 +73,8 @@ class Minifier
                 $filesAfterCompression[$key] = $config;
                 continue;
             }
+            // Do not proceed, if asset already minified/gzipped
+            if (preg_match("/(?:-min\.)|(\.gz$)/", $config['file'])) continue;
 
             // If key "code" is existing, this is not a file, it's inline code
             if (array_key_exists('code', $config)) {
