@@ -101,6 +101,23 @@ class Minifier
             /** @var Minify\CSS|Minify\JS $minifier */
             $minifier = new $minifierClassName();
             $sourceFilePath = GeneralUtility::getFileAbsFileName($config['file']);
+
+            if (!file_exists($sourceFilePath)) {
+                // Do not proceed, if file is missing
+                $filesAfterCompression[$key] = $config;
+                continue;
+            }
+
+            // Check for gzipped assets
+            $file = fopen($sourceFilePath, 'rb');
+            $firstBytes = fread($file, 2);
+            fclose($file);
+            if ($firstBytes === "\x1F\x8B") {
+                // Do not proceed, if given asset is gzipped
+                $filesAfterCompression[$key] = $config;
+                continue;
+            }
+
             if ($type === self::TYPE_STYLESHEET) {
                 $minifier->setImportExtensions([]);
             }
