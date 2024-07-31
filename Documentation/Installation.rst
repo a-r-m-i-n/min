@@ -24,7 +24,7 @@ Requirements
 ------------
 
 - PHP 8.1 or higher
-- TYPO3 CMS 12.4 LTS
+- TYPO3 CMS 12.4 LTS or TYPO3 CMS 13.0 or higher
 
 
 Setup
@@ -36,13 +36,19 @@ You can do this in TypoScript using the ``@import`` function:
 
 .. code-block:: typoscript
 
-	@import 'EXT:min/Configuration/TypoScript/setup.typoscript'
+	@import 'EXT:min/Configuration/Sets/Min/setup.typoscript'
 
 
 or define it as static include in the TypoScript template itself:
 
 .. image:: Images/Installation_StaticIncludes.png
    :alt: Setup of EXT:min in TypoScript template's static includes
+
+You may also want to use site sets in your projects.
+Therefore the pre configured site sets are now available in your site settings in the backend:
+
+.. image:: Images/Installation_SiteSets.png
+   :alt: Site sets in TYPO3 backend
 
 
 Upgrade notice

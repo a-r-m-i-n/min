@@ -1,0 +1,22 @@
+# This disables all features of EXT:min and also the compression and concatenation features of the core itself
+[backend.user.isLoggedIn && request && traverse(request.getQueryParams(), 'debug') > 0]
+	config {
+		linkVars := addToList(debug(1))
+		compressCss = 0
+		concatenateCss = 0
+		compressJs = 0
+		concatenateJs = 0
+		no_cache = 1
+	}
+
+	plugin.tx_min {
+		tinysource.enable = 0
+
+		assetCollector {
+			compressCss = 0
+			compressInlineCss = 0
+			compressJs = 0
+			compressInlineJs = 0
+		}
+	}
+[global]

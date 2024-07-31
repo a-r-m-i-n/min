@@ -1,0 +1,12 @@
+plugin.tx_min.tinysource {
+	enable = 1
+	body {
+		stripComments = 1
+		preventStripOfSearchComment = 1
+		removeTypeInScriptTags = 1
+	}
+	protectCode {
+		10 = /(<textarea.*?>.*?<\/textarea>)/is
+		20 = /(<pre.*?>.*?<\/pre>)/is
+	}
+}

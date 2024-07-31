@@ -1,0 +1,13 @@
+config {
+	compressCss = 1
+	concatenateCss = 1
+	compressJs = 1
+	concatenateJs = 1
+}
+
+plugin.tx_min.assetCollector {
+	compressCss = 1
+	compressInlineCss = 1
+	compressJs = 1
+	compressInlineJs = 1
+}

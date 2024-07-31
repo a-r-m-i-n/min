@@ -10,6 +10,14 @@ Configuration
 By default, when you've applied the EXT:min TypoScript configuration, all minification features are enabled
 and pre-configured to get best compression results.
 
+New in TYPO3 v13
+----------------
+
+Now that you can use site sets in your projects. You may only want to include the minification of assets
+or the tinysourcing of the html output and enabling the debugging options only when needed.
+
+Therefore the pre configured site sets are now available in your site settings in the backend.
+
 
 Debugging
 ---------
