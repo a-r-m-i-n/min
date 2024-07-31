@@ -5,8 +5,11 @@ namespace T3\Min;
  *  | under GNU General Public License.
  *  |
  *  | (c) 2011-2023 Armin Vieweg <info@v.ieweg.de>
+ *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  *  |     2012 Dennis Römmich <dennis@roemmich.eu>
  */
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
@@ -24,10 +27,14 @@ class Tinysource
      * Method called by TinysourceEventListener
      * It checks the typoscript configuration and do the minifying of source code.
      */
-    public function tinysource(string $source): string
+    public function tinysource(string $source, ServerRequestInterface $request): string
     {
-        $this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['tinysource.'] ?? [];
-
+        /** @var FrontendTypoScript $frontendTypoScript */
+        $frontendTypoScript = $request->getAttribute('frontend.typoscript');
+        if ($frontendTypoScript === null) {
+            return $source;
+        }
+        $this->conf = $frontendTypoScript->getSetupArray()['plugin.']['tx_min.']['tinysource.'] ?? [];
         if (($this->conf['enable'] ?? false) && !($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false)) {
             $headOffset = strpos($source, '<head');
             $headEndOffset = strpos($source, '>', $headOffset);

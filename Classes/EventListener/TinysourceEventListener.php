@@ -6,6 +6,7 @@ namespace T3\Min\EventListener;
  *  |
  *  | (c) 2023 Armin Vieweg <info@v.ieweg.de>
  *  |     2023 Benjamin Gries <gries@iwkoeln.de>
+ *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  */
 use TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent;
 use T3\Min\Tinysource;
@@ -21,8 +22,10 @@ class TinysourceEventListener
 
     public function __invoke(AfterCacheableContentIsGeneratedEvent $event): void
     {
+
         $event->getController()->content = $this->tinysource->tinysource(
-            $event->getController()->content
+            $event->getController()->content,
+            $event->getRequest()
         );;
     }
 }

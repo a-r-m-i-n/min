@@ -15,11 +15,11 @@ $EM_CONF['min'] = [
     'author_email' => 'info@v.ieweg.de',
     'author_company' => 'v.ieweg Webentwicklung',
     'state' => 'stable',
-    'version' => '3.0.2',
+    'version' => '3.1.0-dev',
     'constraints' => [
         'depends' => [
             'php' => '8.1.0-0.0.0',
-            'typo3' => '12.4.0-12.4.99',
+            'typo3' => '12.4.0-13.9.99',
         ],
         'conflicts' => [],
         'suggests' => [],

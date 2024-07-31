@@ -7,22 +7,28 @@ namespace T3\Min\EventListener;
  *  | under GNU General Public License.
  *  |
  *  | (c) 2022-2023 Armin Vieweg <info@v.ieweg.de>
+ *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  */
+use Psr\Http\Message\ServerRequestInterface;
 use T3\Min\Minifier;
 use TYPO3\CMS\Core\Page\Event\AbstractBeforeAssetRenderingEvent;
 use TYPO3\CMS\Core\Page\Event\BeforeJavaScriptsRenderingEvent;
 use TYPO3\CMS\Core\Page\Event\BeforeStylesheetsRenderingEvent;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AssetRendererEventListener
 {
     private Minifier $minifier;
-    private array $assetCollectorConf;
+    private array $assetCollectorConf = [];
 
     public function __construct(Minifier $minifier)
     {
         $this->minifier = $minifier;
-        $this->assetCollectorConf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_min.']['assetCollector.'] ?? [];
+        $frontendTypoScript = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript');
+        if ($frontendTypoScript instanceof FrontendTypoScript) {
+            $this->assetCollectorConf = $frontendTypoScript->getSetupArray()['plugin.']['tx_min.']['assetCollector.'] ?? [];
+        }
     }
 
     public function beforeStyleSheetsRendering(BeforeStylesheetsRenderingEvent $event): void

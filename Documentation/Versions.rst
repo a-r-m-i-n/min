@@ -6,6 +6,13 @@
 Versions
 ========
 
+3.1.0
+-----
+
+- [FEATURE] Add TYPO3 13 support (**Thanks to Joel Mai**)
+- [DEVOPS] Update DDEV config to provide TYPO3 v13 environment
+
+
 3.0.2
 -----
 
