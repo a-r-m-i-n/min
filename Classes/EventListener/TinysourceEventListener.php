@@ -4,7 +4,7 @@ namespace T3\Min\EventListener;
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2023 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2023-2024 Armin Vieweg <armin@v.ieweg.de>
  *  |     2023 Benjamin Gries <gries@iwkoeln.de>
  *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  */

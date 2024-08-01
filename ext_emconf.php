@@ -3,7 +3,7 @@
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2016-2023 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2016-2024 Armin Vieweg <armin@v.ieweg.de>
  */
 
 // phpcs:disable
@@ -12,8 +12,7 @@ $EM_CONF['min'] = [
     'description' => 'Extends TYPO3\'s compressor for JS and CSS with minifier. This may save you up to 70% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.',
     'category' => 'fe',
     'author' => 'Armin Vieweg',
-    'author_email' => 'info@v.ieweg.de',
-    'author_company' => 'v.ieweg Webentwicklung',
+    'author_email' => 'armin@v.ieweg.de',
     'state' => 'stable',
     'version' => '3.1.0-dev',
     'constraints' => [

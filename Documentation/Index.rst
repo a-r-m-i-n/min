@@ -31,7 +31,7 @@ EXT:min - Minifier for TYPO3 CMS
 		Armin Vieweg
 
 	:Email:
-		info@v.ieweg.de
+		armin@v.ieweg.de
 
 	:License:
 		This document is published under the Open Content License

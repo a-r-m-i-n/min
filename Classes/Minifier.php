@@ -4,7 +4,8 @@ namespace T3\Min;
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
  *  | under GNU General Public License.
  *  |
- *  | (c) 2016-2023 Armin Vieweg <info@v.ieweg.de>
+ *  | (c) 2016-2024 Armin Vieweg <armin@v.ieweg.de>
+ *  |     2023 Joel Mai <mai@iwkoeln.de>
  */
 use \MatthiasMullie\Minify;
 use T3\Min\Helper\ResourceCompressorPath;
