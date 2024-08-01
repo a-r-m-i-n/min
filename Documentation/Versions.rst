@@ -6,6 +6,13 @@
 Versions
 ========
 
+3.0.2
+-----
+
+- [BUGFIX] Fix typoscript, if request is not set an error is thrown (**Thanks to Can Karadağ**)
+- [TASK] Migrate deprecated TSFE backend user logged in check (**Thanks to Joel Mai**)
+
+
 3.0.1
 -----
 
