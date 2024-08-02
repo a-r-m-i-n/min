@@ -9,6 +9,11 @@ Versions
 3.1.0
 -----
 
+- [BUGFIX] Add hash to compressed asset collector assets
+- [BUGFIX] Disable asset collector, when in debug mode
+- [TASK] Improve composer.json
+- [TASK] Update matthiasmullie/minify from 1.3.71 to 1.3.73
+- [TASK] Update copyrights
 - [FEATURE] Add TYPO3 13 support (**Thanks to Joel Mai**)
 - [DEVOPS] Update DDEV config to provide TYPO3 v13 environment
 
