@@ -12,7 +12,7 @@ EXT:min uses the great [matthiasmullie/minify](https://github.com/matthiasmullie
 ## Requirements 
 
 - PHP 8.1 or higher
-- TYPO3 CMS 12.4 LTS
+- TYPO3 CMS 12.4 LTS or 13.x
 
 Use older versions of EXT:min for previous TYPO3 versions.
 
