@@ -96,7 +96,7 @@ class Minifier
 
             // Process with file and build target filename for minified result
             $sitePath = $this->getSitePath();
-            $targetFilename = $this->generateTargetFilename($config['file']);
+            $targetFilename = $this->generateTargetFilename($config['file'], $isAssetCollector);
 
             // Compress the file
             /** @var Minify\CSS|Minify\JS $minifier */
@@ -160,14 +160,19 @@ class Minifier
         return Environment::getPublicPath() . DIRECTORY_SEPARATOR;
     }
 
-    private function generateTargetFilename(string $filepath): string
+    private function generateTargetFilename(string $filepath, bool $isAssetCollector): string
     {
         $compressorPath = (string) $this->resourceCompressor;
         if (!is_dir($this->getSitePath() . $compressorPath)) {
             GeneralUtility::mkdir($this->getSitePath() . $compressorPath);
         }
         $pathInfo = pathinfo($filepath);
-        $targetFilename = $compressorPath . $pathInfo['filename'] . '-min.' . $pathInfo['extension'];
+        $pathInfoFilename = $pathInfo['filename'];
+        if ($isAssetCollector) {
+            $pathInfoFilename .= '-' . md5($filepath);
+        }
+
+        $targetFilename = $compressorPath . $pathInfoFilename . '-min.' . $pathInfo['extension'];
 
         if ($this->isGzipUsageEnabled()) {
             $targetFilename .= '.gz';
