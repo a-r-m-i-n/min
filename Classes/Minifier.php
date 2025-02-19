@@ -129,16 +129,17 @@ class Minifier
                     $sitePath . $targetFilename,
                     $GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']
                 );
+		GeneralUtility::fixPermissions($sitePath . $targetFilename);
             } else {
                 $minifier->minify($sitePath . $targetFilename);
-
+		GeneralUtility::fixPermissions($sitePath . $targetFilename);
                 if ($type === self::TYPE_STYLESHEET) {
                     $minifiedCss = file_get_contents($sitePath . $targetFilename);
                     if (!$isInline) {
                         $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
                         $minifiedCss = $this->resourceCompressor->fixRelativeUrlPathsInCssCode($minifiedCss, $relativeSourceFilePath);
                     }
-                    file_put_contents($sitePath . $targetFilename, $this->compressCss($minifiedCss));
+                    GeneralUtility::writeFile($sitePath . $targetFilename, $this->compressCss($minifiedCss));
                 }
             }
 
