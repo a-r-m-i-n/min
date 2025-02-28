@@ -25,7 +25,7 @@ EXT:min - Minifier for TYPO3 CMS
 		TYPO3 CMS, minifier, minify, compress, optimize, output
 
 	:Copyright:
-		2016-2024
+		2016-2025
 
 	:Author:
 		Armin Vieweg

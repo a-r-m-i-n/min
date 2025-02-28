@@ -5,7 +5,7 @@
 
 ---
 conf.py:
-  copyright: 2016-2024
+  copyright: 2016-2025
   project: EXT:min - Minifier for TYPO3 CMS
   version: 3.1
   release: 3.1.0
