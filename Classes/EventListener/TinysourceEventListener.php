@@ -23,7 +23,6 @@ class TinysourceEventListener
 
     public function __invoke(AfterCacheableContentIsGeneratedEvent $event): void
     {
-
         $event->getController()->content = $this->tinysource->tinysource(
             $event->getController()->content,
             $event->getRequest()

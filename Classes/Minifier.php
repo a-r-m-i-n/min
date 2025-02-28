@@ -37,6 +37,8 @@ class Minifier
 
     /**
      * Method called by "jsCompressHandler".
+     *
+     * @param array<string, array<string, array<string, mixed>>> $parameters
      */
     public function minifyJavaScript(array &$parameters): void
     {
@@ -49,6 +51,8 @@ class Minifier
 
     /**
      * Method called by "cssCompressHandler".
+     *
+     * @param array<string, array<string, array<string, mixed>>> $parameters
      */
     public function minifyStylesheet(array &$parameters): void
     {
@@ -59,6 +63,10 @@ class Minifier
 
     /**
      * Minifies given files.
+     *
+     * @param array<string, array<string, mixed>> $files
+     *
+     * @return array<string, array<string, mixed>>
      */
     public function minifyFiles(
         array $files,
@@ -80,7 +88,7 @@ class Minifier
             if (array_key_exists('code', $config)) {
                 /** @var Minify\CSS|Minify\JS $minifier */
                 $minifier = new $minifierClassName();
-                if (self::TYPE_STYLESHEET === $type) {
+                if (self::TYPE_STYLESHEET === $type && method_exists($minifier, 'setImportExtensions')) {
                     $minifier->setImportExtensions([]);
                 }
                 $code = $config['code'];
@@ -112,15 +120,17 @@ class Minifier
 
             // Check for gzipped assets
             $file = fopen($sourceFilePath, 'rb');
-            $firstBytes = fread($file, 2);
-            fclose($file);
-            if ("\x1F\x8B" === $firstBytes) {
-                // Do not proceed, if given asset is gzipped
-                $filesAfterCompression[$key] = $config;
-                continue;
+            if ($file) {
+                $firstBytes = fread($file, 2);
+                fclose($file);
+                if ("\x1F\x8B" === $firstBytes) {
+                    // Do not proceed, if given asset is gzipped
+                    $filesAfterCompression[$key] = $config;
+                    continue;
+                }
             }
 
-            if (self::TYPE_STYLESHEET === $type) {
+            if (self::TYPE_STYLESHEET === $type && method_exists($minifier, 'setImportExtensions')) {
                 $minifier->setImportExtensions([]);
             }
             $minifier->add($sourceFilePath);
@@ -135,7 +145,7 @@ class Minifier
                 $minifier->minify($sitePath . $targetFilename);
                 GeneralUtility::fixPermissions($sitePath . $targetFilename);
                 if (self::TYPE_STYLESHEET === $type) {
-                    $minifiedCss = file_get_contents($sitePath . $targetFilename);
+                    $minifiedCss = file_get_contents($sitePath . $targetFilename) ?: '';
                     if (!$isInline) {
                         $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
                         $minifiedCss = $this->resourceCompressor->fixRelativeUrlPathsInCssCode($minifiedCss, $relativeSourceFilePath);
@@ -175,7 +185,7 @@ class Minifier
             $pathInfoFilename .= '-' . md5($filepath);
         }
 
-        $targetFilename = $compressorPath . $pathInfoFilename . '-min.' . $pathInfo['extension'];
+        $targetFilename = $compressorPath . $pathInfoFilename . '-min.' . ($pathInfo['extension'] ?? '');
 
         if ($this->isGzipUsageEnabled()) {
             $targetFilename .= '.gz';
@@ -216,19 +226,21 @@ class Minifier
         );
 
         // Strip leading whitespace
-        $compressedCss = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", ltrim($compressedCss));
+        $compressedCss = preg_replace('/[ \\t]*+\\n\\s*+/S', "\n", ltrim($compressedCss ?? $cssCode));
 
         // Consolidate multi-lines space
-        return preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedCss);
+        return preg_replace('/(?<!\\s)\\s*+$/S', "\n", $compressedCss) ?? $cssCode;
     }
 
     /**
      * Callback function for preg_replace
      * Copy from TYPO3 CMS, where it is deprecated since version 7, and removed in version 8.
      *
+     * @param array<int, string> $matches
+     *
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    private function compressCssPregCallback(array $matches): string
+    private static function compressCssPregCallback(array $matches): string
     {
         if ($matches[1]) {
             // Group 1: Double quoted string.
@@ -274,7 +286,7 @@ class Minifier
             // Clean post-punctuation.
             $matches[9] = preg_replace('/;?\\}/S', '}' . "\n", $matches[9]);
 
-            return $matches[9];
+            return $matches[9] ?? '';
         }
 
         return $matches[0] . "\n" . '/* ERROR! Unexpected _proccess_css_minify() parameter */' . "\n";

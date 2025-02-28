@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class AssetRendererEventListener
 {
     private Minifier $minifier;
+    /** @var array<string, bool> */
     private array $assetCollectorConf = [];
 
     public function __construct(Minifier $minifier)
@@ -109,6 +110,10 @@ class AssetRendererEventListener
 
     /**
      * Converts given assets to Minifier array. Also removes file paths from instruction set, which are not existing.
+     *
+     * @param array<string, array<string, mixed>> $sources
+     *
+     * @return array<string, array<string, mixed>>
      */
     private function buildMinifierAssetsArray(array $sources, AbstractBeforeAssetRenderingEvent $event): array
     {

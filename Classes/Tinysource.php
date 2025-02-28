@@ -21,7 +21,9 @@ class Tinysource
     private const TINYSOURCE_HEAD = 'head.';
     private const TINYSOURCE_BODY = 'body.';
 
+    /** @var array<string, mixed> */
     public array $conf = [];
+    /** @var array<string, string> */
     protected array $protectedCode = [];
 
     /**
@@ -30,7 +32,7 @@ class Tinysource
      */
     public function tinysource(string $source, ServerRequestInterface $request): string
     {
-        /** @var FrontendTypoScript $frontendTypoScript */
+        /** @var FrontendTypoScript|null $frontendTypoScript */
         $frontendTypoScript = $request->getAttribute('frontend.typoscript');
         if (null === $frontendTypoScript) {
             return $source;
@@ -38,14 +40,14 @@ class Tinysource
         $this->conf = $frontendTypoScript->getSetupArray()['plugin.']['tx_min.']['tinysource.'] ?? [];
         if (($this->conf['enable'] ?? false) && !($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false)) {
             $headOffset = strpos($source, '<head');
-            $headEndOffset = strpos($source, '>', $headOffset);
+            $headEndOffset = strpos($source, '>', $headOffset ?: 0);
             $closingHeadOffset = strpos($source, '</head>');
             $bodyOffset = strpos($source, '<body');
-            $bodyEndOffset = strpos($source, '>', $bodyOffset);
+            $bodyEndOffset = strpos($source, '>', $bodyOffset ?: 0);
             $closingBodyOffset = strpos($source, '</body>');
 
-            if ((false !== $headOffset && false !== $headEndOffset && false !== $closingHeadOffset)
-                || (false !== $bodyOffset && false !== $bodyEndOffset && false !== $closingBodyOffset)
+            if (false !== $headOffset && false !== $headEndOffset && false !== $closingHeadOffset
+                && false !== $bodyOffset && false !== $bodyEndOffset && false !== $closingBodyOffset
             ) {
                 $beforeHead = substr($source, 0, $headEndOffset + 1);
                 $head = substr($source, $headEndOffset + 1, $closingHeadOffset - $headEndOffset - 1);
@@ -96,12 +98,15 @@ class Tinysource
         }
 
         // Strip double spaces
+        /** @var string $source */
         $source = preg_replace('/( {2,})/', ' ', $source);
 
         // Strip two or more line breaks to one
+        /** @var string $source */
         $source = preg_replace('/(\n{2,})/i', "\n", $source);
 
         if ($this->conf[$type]['removeTypeInScriptTags'] ?? false) {
+            /** @var string $source */
             $source = str_replace(
                 [
                     ' type="text/javascript"',
@@ -153,7 +158,7 @@ class Tinysource
             '(?!JS_INLINE_FOOTER)(?!FOOTERDATA)(?!\s\#\#\#).*?\-\->/s',
             '',
             $source
-        );
+        ) ?? $source;
     }
 
     /**
@@ -189,7 +194,7 @@ class Tinysource
      */
     private function restoreProtectedCode(string $source): string
     {
-        if (\is_array($this->conf['protectCode.'] ?? null) && !empty($this->conf['protectCode.'] ?? [])) {
+        if (array_key_exists('protectCode.', $this->conf) && is_array($this->conf['protectCode.']) && !empty($this->conf['protectCode.'])) {
             foreach ($this->protectedCode as $key => $code) {
                 $source = str_replace($key, $code, $source);
             }
