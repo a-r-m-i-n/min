@@ -6,6 +6,19 @@
 Versions
 ========
 
+3.1.1
+-----
+
+- [TASK] Update deprecated license in composer.json
+- [TASK] Apply code fixes
+- [DEVOPS] Add code quality checks
+- [TASK] Update copyrights
+- [BUGFIX] Fixes file permissions for assets created by minifier (**Thanks to Philipp Thiele**)
+- [TASK] Update "TYPO3 13.4 LTS" labels
+- [DEVOPS] Add missing "SYS/trustedHostsPattern" configuration (in DDEV)
+- [DOCS] Update README
+
+
 3.1.0
 -----
 
