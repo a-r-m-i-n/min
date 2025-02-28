@@ -17,6 +17,15 @@
         "typo3/cms-core": "^12.4 || ^13",
         "matthiasmullie/minify": "^1.3"
     },
+    "require-dev": {
+        "armin/editorconfig-cli": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.69",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "saschaegerer/phpstan-typo3": "^2.0",
+        "helmich/typo3-typoscript-lint": "^3.3",
+        "typo3/cms-frontend": "^12.4 || ^13"
+    },
     "autoload": {
         "psr-4": {
             "T3\\Min\\": "Classes"
@@ -29,6 +38,33 @@
     "extra": {
         "typo3/cms": {
             "extension-key": "min"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@editorconfig-check",
+            "@phpcs",
+            "@phpstan",
+            "@typoscript-lint",
+            "@composer validate --strict --no-check-version --no-check-all --no-check-publish"
+        ],
+        "fix": [
+            "@editorconfig-fix",
+            "@phpcs:fix",
+            "@phpstan",
+            "@typoscript-lint"
+        ],
+        "editorconfig-check": "ec -g -u",
+        "editorconfig-fix": "ec -g --fix",
+        "phpcs": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config .build/php-cs-fixer.php --ansi --verbose --diff --dry-run -- Classes",
+        "phpcs:fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config .build/php-cs-fixer.php --ansi -- Classes",
+        "phpstan": "phpstan analyse -c .build/phpstan.neon -l 8 -- Classes",
+        "typoscript-lint": "typoscript-lint --fail-on-warnings -c .build/typoscript-lint.yaml -- Configuration/TypoScript"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
         }
     }
 }

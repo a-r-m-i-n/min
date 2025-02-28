@@ -3,3 +3,4 @@ vendor/
 Documentation-GENERATED-temp/
 /composer.lock
 /*.zip
+/.php-cs-fixer.cache
