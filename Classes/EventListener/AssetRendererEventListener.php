@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace T3\Min\EventListener;
 
@@ -9,7 +10,6 @@ namespace T3\Min\EventListener;
  *  | (c) 2022-2025 Armin Vieweg <armin@v.ieweg.de>
  *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  */
-use Psr\Http\Message\ServerRequestInterface;
 use T3\Min\Minifier;
 use TYPO3\CMS\Core\Page\Event\AbstractBeforeAssetRenderingEvent;
 use TYPO3\CMS\Core\Page\Event\BeforeJavaScriptsRenderingEvent;
@@ -33,8 +33,8 @@ class AssetRendererEventListener
 
     public function beforeStyleSheetsRendering(BeforeStylesheetsRenderingEvent $event): void
     {
-        if ((!$event->isInline() && (!isset($this->assetCollectorConf['compressCss']) || !$this->assetCollectorConf['compressCss'])) ||
-            ($event->isInline() && (!isset($this->assetCollectorConf['compressInlineCss']) || !$this->assetCollectorConf['compressInlineCss']))
+        if ((!$event->isInline() && (!isset($this->assetCollectorConf['compressCss']) || !$this->assetCollectorConf['compressCss']))
+            || ($event->isInline() && (!isset($this->assetCollectorConf['compressInlineCss']) || !$this->assetCollectorConf['compressInlineCss']))
         ) {
             return;
         }
@@ -71,8 +71,8 @@ class AssetRendererEventListener
 
     public function beforeJavaScriptsRendering(BeforeJavaScriptsRenderingEvent $event): void
     {
-        if ((!$event->isInline() && (!isset($this->assetCollectorConf['compressJs']) || !$this->assetCollectorConf['compressJs'])) ||
-            ($event->isInline() && (!isset($this->assetCollectorConf['compressInlineJs']) || !$this->assetCollectorConf['compressInlineJs']))
+        if ((!$event->isInline() && (!isset($this->assetCollectorConf['compressJs']) || !$this->assetCollectorConf['compressJs']))
+            || ($event->isInline() && (!isset($this->assetCollectorConf['compressInlineJs']) || !$this->assetCollectorConf['compressInlineJs']))
         ) {
             return;
         }
@@ -109,10 +109,6 @@ class AssetRendererEventListener
 
     /**
      * Converts given assets to Minifier array. Also removes file paths from instruction set, which are not existing.
-     *
-     * @param array $sources
-     * @param AbstractBeforeAssetRenderingEvent $event
-     * @return array
      */
     private function buildMinifierAssetsArray(array $sources, AbstractBeforeAssetRenderingEvent $event): array
     {
@@ -125,14 +121,14 @@ class AssetRendererEventListener
             if ($event->isInline()) {
                 $assets[$uniqueIdentifier] = [
                     'compress' => true,
-                    'code' => $asset['source']
+                    'code' => $asset['source'],
                 ];
             } else {
                 $path = GeneralUtility::getFileAbsFileName($asset['source']);
                 if ($path && file_exists($path)) {
                     $assets[$uniqueIdentifier] = [
                         'compress' => true,
-                        'file' => $path
+                        'file' => $path,
                     ];
                 }
             }

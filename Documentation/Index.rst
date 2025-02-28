@@ -9,42 +9,42 @@ EXT:min - Minifier for TYPO3 CMS
 
 .. only:: html
 
-	:Classification:
-		min
+    :Classification:
+        min
 
-	:Version:
-		|release|
+    :Version:
+        |release|
 
-	:Language:
-		en
+    :Language:
+        en
 
-	:Description:
-		Extends TYPO3's compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.
+    :Description:
+        Extends TYPO3's compressor for JS and CSS with minifier. This may save you up to 60% of default compressed file size. Also compresses HTML output of TYPO3. Full composer support.
 
-	:Keywords:
-		TYPO3 CMS, minifier, minify, compress, optimize, output
+    :Keywords:
+        TYPO3 CMS, minifier, minify, compress, optimize, output
 
-	:Copyright:
-		2016-2025
+    :Copyright:
+        2016-2025
 
-	:Author:
-		Armin Vieweg
+    :Author:
+        Armin Vieweg
 
-	:Email:
-		armin@v.ieweg.de
+    :Email:
+        armin@v.ieweg.de
 
-	:License:
-		This document is published under the Open Content License
-		available from http://www.opencontent.org/opl.shtml
+    :License:
+        This document is published under the Open Content License
+        available from http://www.opencontent.org/opl.shtml
 
-	:Rendered:
-		|today|
+    :Rendered:
+        |today|
 
-	The content of this document is related to TYPO3,
-	a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
+    The content of this document is related to TYPO3,
+    a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
 
 
-	**Table of Contents**
+    **Table of Contents**
 
 .. toctree::
         :maxdepth: 2

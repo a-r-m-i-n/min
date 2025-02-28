@@ -1,4 +1,5 @@
 <?php
+
 namespace T3\Min\Helper;
 
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
@@ -9,14 +10,12 @@ namespace T3\Min\Helper;
 use TYPO3\CMS\Core\Resource\ResourceCompressor;
 
 /**
- * Minifier for JS and CSS
- *
- * @package T3\Min
+ * Minifier for JS and CSS.
  */
 class ResourceCompressorPath extends ResourceCompressor
 {
     /**
-     * ResourceCompressorPath constructor
+     * ResourceCompressorPath constructor.
      */
     public function __construct()
     {

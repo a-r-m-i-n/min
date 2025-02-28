@@ -1,4 +1,5 @@
 <?php
+
 namespace T3\Min;
 
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
@@ -7,14 +8,14 @@ namespace T3\Min;
  *  | (c) 2016-2025 Armin Vieweg <armin@v.ieweg.de>
  *  |     2023 Joel Mai <mai@iwkoeln.de>
  */
-use \MatthiasMullie\Minify;
+use MatthiasMullie\Minify;
 use T3\Min\Helper\ResourceCompressorPath;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Minifier for JS and CSS
- * using "matthiasmullie/minify" library
+ * using "matthiasmullie/minify" library.
  */
 class Minifier
 {
@@ -24,18 +25,18 @@ class Minifier
     protected ResourceCompressorPath $resourceCompressor;
 
     /**
-     * Minifier constructor
+     * Minifier constructor.
      */
     public function __construct()
     {
         if (!class_exists(Minify\Minify::class)) {
-            require_once(GeneralUtility::getFileAbsFileName('EXT:min/Resources/Private/PHP/vendor/autoload.php'));
+            require_once GeneralUtility::getFileAbsFileName('EXT:min/Resources/Private/PHP/vendor/autoload.php');
         }
         $this->resourceCompressor = GeneralUtility::makeInstance(ResourceCompressorPath::class);
     }
 
     /**
-     * Method called by "jsCompressHandler"
+     * Method called by "jsCompressHandler".
      */
     public function minifyJavaScript(array &$parameters): void
     {
@@ -47,7 +48,7 @@ class Minifier
     }
 
     /**
-     * Method called by "cssCompressHandler"
+     * Method called by "cssCompressHandler".
      */
     public function minifyStylesheet(array &$parameters): void
     {
@@ -57,7 +58,7 @@ class Minifier
     }
 
     /**
-     * Minifies given files
+     * Minifies given files.
      */
     public function minifyFiles(
         array $files,
@@ -79,11 +80,11 @@ class Minifier
             if (array_key_exists('code', $config)) {
                 /** @var Minify\CSS|Minify\JS $minifier */
                 $minifier = new $minifierClassName();
-                if ($type === self::TYPE_STYLESHEET) {
+                if (self::TYPE_STYLESHEET === $type) {
                     $minifier->setImportExtensions([]);
                 }
                 $code = $config['code'];
-                if ($type === self::TYPE_STYLESHEET) {
+                if (self::TYPE_STYLESHEET === $type) {
                     $code = $this->compressCss($code);
                 }
                 $minifier->add($code);
@@ -113,13 +114,13 @@ class Minifier
             $file = fopen($sourceFilePath, 'rb');
             $firstBytes = fread($file, 2);
             fclose($file);
-            if ($firstBytes === "\x1F\x8B") {
+            if ("\x1F\x8B" === $firstBytes) {
                 // Do not proceed, if given asset is gzipped
                 $filesAfterCompression[$key] = $config;
                 continue;
             }
 
-            if ($type === self::TYPE_STYLESHEET) {
+            if (self::TYPE_STYLESHEET === $type) {
                 $minifier->setImportExtensions([]);
             }
             $minifier->add($sourceFilePath);
@@ -129,11 +130,11 @@ class Minifier
                     $sitePath . $targetFilename,
                     $GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']
                 );
-		GeneralUtility::fixPermissions($sitePath . $targetFilename);
+                GeneralUtility::fixPermissions($sitePath . $targetFilename);
             } else {
                 $minifier->minify($sitePath . $targetFilename);
-		GeneralUtility::fixPermissions($sitePath . $targetFilename);
-                if ($type === self::TYPE_STYLESHEET) {
+                GeneralUtility::fixPermissions($sitePath . $targetFilename);
+                if (self::TYPE_STYLESHEET === $type) {
                     $minifiedCss = file_get_contents($sitePath . $targetFilename);
                     if (!$isInline) {
                         $relativeSourceFilePath = substr($sourceFilePath, strlen($sitePath));
@@ -148,6 +149,7 @@ class Minifier
 
             $filesAfterCompression[$isAssetCollector ? $key : $targetFilename] = $config;
         }
+
         return $filesAfterCompression;
     }
 
@@ -163,7 +165,7 @@ class Minifier
 
     private function generateTargetFilename(string $filepath, bool $isAssetCollector): string
     {
-        $compressorPath = (string) $this->resourceCompressor;
+        $compressorPath = (string)$this->resourceCompressor;
         if (!is_dir($this->getSitePath() . $compressorPath)) {
             GeneralUtility::mkdir($this->getSitePath() . $compressorPath);
         }
@@ -178,15 +180,16 @@ class Minifier
         if ($this->isGzipUsageEnabled()) {
             $targetFilename .= '.gz';
         }
+
         return $targetFilename;
     }
 
     /**
-     * Applies TYPO3's default minifier to CSS code
+     * Applies TYPO3's default minifier to CSS code.
      *
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    private function compressCss(string $cssCode) : string
+    private function compressCss(string $cssCode): string
     {
         $cssCode = str_replace(CR, '', $cssCode);
         // Strip any and all carriage returns.
@@ -194,20 +197,20 @@ class Minifier
         // To understand this regex, read: "Mastering Regular Expressions 3rd Edition" chapter 6.
         $compressedCss = preg_replace_callback(
             '%
-				# One-regex-to-rule-them-all! - version: 20100220_0100
-				# Group 1: Match a double quoted string.
-				("[^"\\\\]*+(?:\\\\.[^"\\\\]*+)*+") |  # or...
-				# Group 2: Match a single quoted string.
-				(\'[^\'\\\\]*+(?:\\\\.[^\'\\\\]*+)*+\') |  # or...
-				# Group 3: Match a regular non-MacIE5-hack comment.
-				(/\\*[^\\\\*]*+\\*++(?:[^\\\\*/][^\\\\*]*+\\*++)*+/) |  # or...
-				# Group 4: Match a MacIE5-type1 comment.
-				(/\\*(?:[^*\\\\]*+\\**+(?!/))*+\\\\[^*]*+\\*++(?:[^*/][^*]*+\\*++)*+/(?<!\\\\\\*/)) |  # or...
-				# Group 5: Match a MacIE5-type2 comment.
-				(/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
-				# Group 6: Match everything up to final closing regular comment
-				([^/]*+(?:(?!\\*)/[^/]*+)*?)
-				%Ssx',
+                # One-regex-to-rule-them-all! - version: 20100220_0100
+                # Group 1: Match a double quoted string.
+                ("[^"\\\\]*+(?:\\\\.[^"\\\\]*+)*+") |  # or...
+                # Group 2: Match a single quoted string.
+                (\'[^\'\\\\]*+(?:\\\\.[^\'\\\\]*+)*+\') |  # or...
+                # Group 3: Match a regular non-MacIE5-hack comment.
+                (/\\*[^\\\\*]*+\\*++(?:[^\\\\*/][^\\\\*]*+\\*++)*+/) |  # or...
+                # Group 4: Match a MacIE5-type1 comment.
+                (/\\*(?:[^*\\\\]*+\\**+(?!/))*+\\\\[^*]*+\\*++(?:[^*/][^*]*+\\*++)*+/(?<!\\\\\\*/)) |  # or...
+                # Group 5: Match a MacIE5-type2 comment.
+                (/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/(?<=\\\\\\*/))  # folllowed by...
+                # Group 6: Match everything up to final closing regular comment
+                ([^/]*+(?:(?!\\*)/[^/]*+)*?)
+                %Ssx',
             [self::class, 'compressCssPregCallback'],
             $cssCode
         );
@@ -221,11 +224,11 @@ class Minifier
 
     /**
      * Callback function for preg_replace
-     * Copy from TYPO3 CMS, where it is deprecated since version 7, and removed in version 8
+     * Copy from TYPO3 CMS, where it is deprecated since version 7, and removed in version 8.
      *
      * @see \TYPO3\CMS\Core\Resource\ResourceCompressor::compressCssFile
      */
-    private function compressCssPregCallback(array $matches) : string
+    private function compressCssPregCallback(array $matches): string
     {
         if ($matches[1]) {
             // Group 1: Double quoted string.

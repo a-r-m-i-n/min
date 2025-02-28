@@ -35,12 +35,12 @@ To enable the asset compression of TYPO3, as well as of EXT:min just add this to
 
 .. code-block:: typoscript
 
-	config {
-		compressCss = 1
-		concatenateCss = 1
-		compressJs = 1
-		concatenateJs = 1
-	}
+    config {
+        compressCss = 1
+        concatenateCss = 1
+        compressJs = 1
+        concatenateJs = 1
+    }
 
 
 AssetCollector compression
@@ -52,12 +52,12 @@ You can enable/disable the compression of AssetCollector assets. By default it i
 
 .. code-block:: typoscript
 
-	plugin.tx_min.assetCollector {
-		compressCss = 1
-		compressInlineCss = 1
-		compressJs = 1
-		compressInlineJs = 1
-	}
+    plugin.tx_min.assetCollector {
+        compressCss = 1
+        compressInlineCss = 1
+        compressJs = 1
+        compressInlineJs = 1
+    }
 
 
 HTML source compression
@@ -67,18 +67,18 @@ Because of historical reasons, the configuration for HTML compression is located
 
 .. code-block:: typoscript
 
-	plugin.tx_min.tinysource {
-		enable = 1
-		body {
-			stripComments = 1
-			preventStripOfSearchComment = 1
-			removeTypeInScriptTags = 1
-		}
-		protectCode {
-			10 = /(<textarea.*?>.*?<\/textarea>)/is
-			20 = /(<pre.*?>.*?<\/pre>)/is
-		}
-	}
+    plugin.tx_min.tinysource {
+        enable = 1
+        body {
+            stripComments = 1
+            preventStripOfSearchComment = 1
+            removeTypeInScriptTags = 1
+        }
+        protectCode {
+            10 = /(<textarea.*?>.*?<\/textarea>)/is
+            20 = /(<pre.*?>.*?<\/pre>)/is
+        }
+    }
 
 
 ===================================== ============ ======================================
@@ -166,10 +166,10 @@ protectCode
    Data type
       array
    Default
-	  .. code-block:: typoscript
+      .. code-block:: typoscript
 
-			10 = /(<textarea.*?>.*?<\/textarea>)/is
-			20 = /(<pre.*?>.*?<\/pre>)/is
+            10 = /(<textarea.*?>.*?<\/textarea>)/is
+            20 = /(<pre.*?>.*?<\/pre>)/is
 
    Description
       Allows to protect whitespace sensitive code from being touched, by using regular expressions.

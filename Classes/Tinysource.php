@@ -1,4 +1,5 @@
 <?php
+
 namespace T3\Min;
 
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
@@ -13,7 +14,7 @@ use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Minifies HTML output
+ * Minifies HTML output.
  */
 class Tinysource
 {
@@ -31,7 +32,7 @@ class Tinysource
     {
         /** @var FrontendTypoScript $frontendTypoScript */
         $frontendTypoScript = $request->getAttribute('frontend.typoscript');
-        if ($frontendTypoScript === null) {
+        if (null === $frontendTypoScript) {
             return $source;
         }
         $this->conf = $frontendTypoScript->getSetupArray()['plugin.']['tx_min.']['tinysource.'] ?? [];
@@ -43,8 +44,8 @@ class Tinysource
             $bodyEndOffset = strpos($source, '>', $bodyOffset);
             $closingBodyOffset = strpos($source, '</body>');
 
-            if (($headOffset !== false && $headEndOffset !== false && $closingHeadOffset !== false) ||
-                ($bodyOffset !== false && $bodyEndOffset !== false && $closingBodyOffset !== false)
+            if ((false !== $headOffset && false !== $headEndOffset && false !== $closingHeadOffset)
+                || (false !== $bodyOffset && false !== $bodyEndOffset && false !== $closingBodyOffset)
             ) {
                 $beforeHead = substr($source, 0, $headEndOffset + 1);
                 $head = substr($source, $headEndOffset + 1, $closingHeadOffset - $headEndOffset - 1);
@@ -71,7 +72,7 @@ class Tinysource
 
     /**
      * Gets the configuration and makes the source tiny, <head> and <body>
-     * separated
+     * separated.
      */
     private function makeTiny(string $source, string $type): string
     {
@@ -85,7 +86,7 @@ class Tinysource
         $source = str_replace($replacements, ' ', $source);
 
         // Strip comments (only for <body>)
-        if (($this->conf[$type]['stripComments'] ?? false) && $type === self::TINYSOURCE_BODY) {
+        if (($this->conf[$type]['stripComments'] ?? false) && self::TINYSOURCE_BODY === $type) {
             // Prevent Strip of Search Comment if preventStripOfSearchComment is true
             if ($this->conf[$type]['preventStripOfSearchComment'] ?? null) {
                 $source = $this->keepTypo3SearchTagAndStripHtmlComments($source);
@@ -116,7 +117,7 @@ class Tinysource
     }
 
     /**
-     * Strips html comments from given string, but keep TYPO3SEARCH_ strings
+     * Strips html comments from given string, but keep TYPO3SEARCH_ strings.
      */
     private function keepTypo3SearchTagAndStripHtmlComments(string $source): string
     {
@@ -142,7 +143,7 @@ class Tinysource
     }
 
     /**
-     * Strips html comments from given string
+     * Strips html comments from given string.
      */
     private function stripHtmlComments(string $source): string
     {
@@ -156,9 +157,10 @@ class Tinysource
     }
 
     /**
-     * Protects code from making it tiny
+     * Protects code from making it tiny.
      *
      * @param string $source which contains the code you want to protect
+     *
      * @return string Given source, protected code parts are replaced by placeholders
      */
     private function protectCode(string $source): string
@@ -181,10 +183,9 @@ class Tinysource
     }
 
     /**
-     * Restores placeholders with stored, protected code
+     * Restores placeholders with stored, protected code.
      *
      * @param string $source with placeholders
-     * @return string
      */
     private function restoreProtectedCode(string $source): string
     {
@@ -193,6 +194,7 @@ class Tinysource
                 $source = str_replace($key, $code, $source);
             }
         }
+
         return $source;
     }
 }

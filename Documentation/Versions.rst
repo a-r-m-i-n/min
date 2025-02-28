@@ -211,4 +211,3 @@ to avoid problems with PackageStates.php processing.
 - [TASK] Disable import CSS
 - [TASK] Add content to README
 - [INITIAL] Kickstart new extension "min"
-

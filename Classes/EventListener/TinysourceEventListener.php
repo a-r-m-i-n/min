@@ -1,4 +1,5 @@
 <?php
+
 namespace T3\Min\EventListener;
 
 /*  | This extension is made with ❤ for TYPO3 CMS and is licensed
@@ -8,8 +9,8 @@ namespace T3\Min\EventListener;
  *  |     2023 Benjamin Gries <gries@iwkoeln.de>
  *  |     2023-2024 Joel Mai <mai@iwkoeln.de>
  */
-use TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent;
 use T3\Min\Tinysource;
+use TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent;
 
 class TinysourceEventListener
 {
@@ -26,6 +27,6 @@ class TinysourceEventListener
         $event->getController()->content = $this->tinysource->tinysource(
             $event->getController()->content,
             $event->getRequest()
-        );;
+        );
     }
 }

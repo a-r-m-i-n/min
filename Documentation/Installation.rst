@@ -36,7 +36,7 @@ You can do this in TypoScript using the ``@import`` function:
 
 .. code-block:: typoscript
 
-	@import 'EXT:min/Configuration/TypoScript/setup.typoscript'
+    @import 'EXT:min/Configuration/TypoScript/setup.typoscript'
 
 
 or define it as static include in the TypoScript template itself:
@@ -62,8 +62,8 @@ When you upgrade EXT:min from version 1.0 to 2.0, **you need to update your Typo
 - The ``protectCode`` moved from ``head`` and ``body`` section, to root level.
   Any old occurrences are being ignored (which may break, protected code)
 - The following options has been removed, those functionalities are enabled by default, when tinysource is enabled:
-	- ``stripTabs``
-	- ``stripNewLines``
-	- ``stripDoubleSpaces``
-	- ``stripTwoLinesToOne``
+    - ``stripTabs``
+    - ``stripNewLines``
+    - ``stripDoubleSpaces``
+    - ``stripTwoLinesToOne``
 - The function ``stripSpacesBetweenTags`` has been removed entirely
