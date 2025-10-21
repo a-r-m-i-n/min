@@ -27,7 +27,7 @@ class AssetRendererEventListener
     {
         $this->minifier = $minifier;
         $frontendTypoScript = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript');
-        if ($frontendTypoScript instanceof FrontendTypoScript) {
+        if ($frontendTypoScript instanceof FrontendTypoScript && $frontendTypoScript->hasSetup()) {
             $this->assetCollectorConf = $frontendTypoScript->getSetupArray()['plugin.']['tx_min.']['assetCollector.'] ?? [];
         }
     }
