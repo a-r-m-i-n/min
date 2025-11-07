@@ -6,6 +6,11 @@
 Versions
 ========
 
+3.1.2
+-----
+
+- [BUGFIX] Check, if TypoScript setup already exists before calling getSetupArray to avoid a runtime exception (**Thanks to Mikel Wohlschlegel**)
+
 3.1.1
 -----
 
